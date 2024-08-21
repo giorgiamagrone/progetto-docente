@@ -1,0 +1,13 @@
+body { 
+    font-family: "Geneva";
+    color:dimgrey;
+}
+
+a { 
+	text-decoration: none; 
+    color: darkgrey;
+}
+
+a:hover { 
+	text-decoration: underline; 
+}

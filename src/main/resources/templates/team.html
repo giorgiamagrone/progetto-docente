@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Team</title>
+	<link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+	<h1>Dettagli Team</h1>
+	<div th:if="${team}">
+		<span th:text="${team.name}">lakers</span>
+		<span th:text="'(' + ${team.year} + ')'">2000</span>
+		<span th:text="${team.address}">street 1</span>
+		
+	</div>
+	<div th:unless="${team}">Non esiste</div>
+</body>
+
+</html>
