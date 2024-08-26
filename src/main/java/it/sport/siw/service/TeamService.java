@@ -1,5 +1,7 @@
 package it.sport.siw.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,14 +16,20 @@ public class TeamService {
 	public Team findById(Long id) {
 		return teamRepository.findById(id).get();
 	}
+	
 
 	public Iterable<Team> findAll() {
 		return teamRepository.findAll();
 	}
 
-	public void save(Team team) {
-		// TODO Auto-public void inserisciPersona(Movie persona) {
-		teamRepository.save(team);
+	public Team save(Team team) {
+		return teamRepository.save(team);
 		
+	}
+
+
+	public List<Team> findByYear(Integer year) {
+		// TODO Auto-generated method stub
+		return teamRepository.findByYear(year);
 	}
 }

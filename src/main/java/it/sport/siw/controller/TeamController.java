@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import it.sport.siw.model.Team;
 import it.sport.siw.service.TeamService;
@@ -26,7 +27,7 @@ public class TeamController {
 	  public String newTeam(@ModelAttribute("team") Team team, Model model) {
 		this.teamService.save(team);
 	    model.addAttribute("team", team);
-	      return "redirect:team/"+team.getId();
+	      return "redirect:/team/"+team.getId();
 	  }
 
 	  @GetMapping("/team/{id}")
@@ -40,4 +41,16 @@ public class TeamController {
 	    model.addAttribute("teams", this.teamService.findAll());
 	    return "teams.html";
 	  }
+	  
+	 @GetMapping("/formSearchTeam")
+	  public String formSearchTeam() {
+	    return "formSearchTeam.html";
+	  }
+
+	  @PostMapping("/SearchTeams")
+	  public String searchTeams(Model model, @RequestParam("year") Integer year) {
+	      model.addAttribute("teams", this.teamService.findByYear(year));
+	      return "foundTeam.html";
+	 
+}
 }
