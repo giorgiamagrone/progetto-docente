@@ -2,25 +2,17 @@
 <html>
 
 <head>
-	<title>Team</title>
-	<link rel="stylesheet" href="/css/stile.css" />
+	<title>Squadra</title>
+	<link rel="stylesheet" href="/stile.css?version=2" />
 </head>
 
 <body>
-	<h1>Team</h1>
-
-	<!-- Se la lista 'teams' è vuota o nulla, mostra un messaggio -->
-	<div th:if="${teams == null || teams.isEmpty()}">
-		Non ci sono team nel sistema
-	</div>
-
-	<!-- Se ci sono team, elencali -->
-	<ul th:if="${teams != null && !teams.isEmpty()}">
+	<h1>Squadra</h1>
+	<div th:if="${teams.isEmpty()}">Non ci sono squadre nel sistema</div>
+	<ul>
 		<li th:each="team : ${teams}">
-			<a th:href="@{'/team/' + ${team.id}}" 
-			   th:text="${team.name} + ' (' + ${team.year} + ') ' + ${team.address}">
-				lakers (2000) street 1
-			</a>
+			<a th:href="@{'/team' + '/' + ${team.id}}"
+				th:text="${team.name} + ' (' + ${team.year} + ') ' + ${team.address}">
 		</li>
 	</ul>
 </body>

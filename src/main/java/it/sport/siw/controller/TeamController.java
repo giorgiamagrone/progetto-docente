@@ -8,14 +8,29 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import it.sport.siw.model.Team;
-import it.sport.siw.service.TeamService;
+import it.sport.siw.repository.TeamRepository;
 
 @Controller
 public class TeamController {
 	@Autowired 
-	TeamService teamService;
+	TeamRepository teamRepository;
+	
+	@GetMapping("/index.html")
+	public String index() {
+		return "index.html";
+	}
+	@PostMapping("/teams")
+	public String newMovie(@ModelAttribute("movie") Team team, Model model) {
+		if (!teamRepository.existsByNameAndYear(team.getName(), team.getYear())) {
+			this.teamRepository.save(team); 
+			model.addAttribute("team", team);
+			return "team.html";
+		} else {
+			model.addAttribute("messaggioErrore", "Questa squadra esiste già");
+			return "formNewTeam.html"; 
+		}
+	}
 	
 	 @GetMapping("/formNewTeam")
 	    public String formNewTeam(Model model) {
@@ -25,31 +40,31 @@ public class TeamController {
 	 
 	 @PostMapping("/team")
 	  public String newTeam(@ModelAttribute("team") Team team, Model model) {
-		this.teamService.save(team);
+		this.teamRepository.save(team);
 	    model.addAttribute("team", team);
 	      return "redirect:/team/"+team.getId();
 	  }
 
 	  @GetMapping("/team/{id}")
 	  public String getTeam(@PathVariable("id") Long id, Model model) {
-	    model.addAttribute("team", this.teamService.findById(id));
+	    model.addAttribute("team", this.teamRepository.findById(id).get());
 	    return "team.html";
 	  }
 
 	  @GetMapping("/team")
 	  public String showTeams(Model model) {
-	    model.addAttribute("teams", this.teamService.findAll());
+	    model.addAttribute("teams", this.teamRepository.findAll());
 	    return "teams.html";
 	  }
 	  
-	 @GetMapping("/formSearchTeam")
+	 @GetMapping("/formSearchTeams")
 	  public String formSearchTeam() {
-	    return "formSearchTeam.html";
+	    return "formSearchTeams.html";
 	  }
 
-	  @PostMapping("/SearchTeams")
-	  public String searchTeams(Model model, @RequestParam("year") Integer year) {
-	      model.addAttribute("teams", this.teamService.findByYear(year));
+	  @PostMapping("/searchTeams")
+	  public String searchTeams(Model model, @RequestParam Integer year) {
+	      model.addAttribute("teams", this.teamRepository.findByYear(year));
 	      return "foundTeam.html";
 	 
 }

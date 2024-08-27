@@ -12,8 +12,8 @@
 	<div th:if="${teams.isEmpty()}">Non ci sono squadre che soddisfano i requisiti</div>
 	<ul th:if="${!teams.isEmpty()}">
 		<li th:each="team : ${teams}">
-			<a href="team.html" th:href="@{'/teams' + '/' + ${movie.id}}"
-				th:text="${team.name} + ' (' + ${movie.year}+')'">Up! (2000)</a>
+			<a th:href="@{'/team' + '/' + ${team.id}}"
+				th:text="${team.name} + ' (' + ${team.year} + ') ' + ${team.address}">
 		</li>
 	</ul>
 </body>

@@ -1,20 +1,17 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Squadra</title>
+    <link rel="stylesheet" href="/stile.css?version=2" />
+  </head>
 
-<head>
-	<title>Team</title>
-	<link rel="stylesheet" href="/css/stile.css" />
-</head>
-
-<body>
-	<h1>Dettagli Team</h1>
-	<div th:if="${team}">
-		<span th:text="${team.name}">lakers</span>
-		<span th:text="'(' + ${team.year} + ')'">2000</span>
-		<span th:text="${team.address}">street 1</span>
-		
-	</div>
-	<div th:unless="${team}">Non esiste</div>
-</body>
-
+  <body>
+   
+      <h1 th:text="${team.name}">Dettagli Squadra</h1>
+	  <div th:if="${team}">
+      <div>Anno: <span th:text="|(${team.year})|"></span></div>
+      <div>Indirizzo: <span th:text="${team.address}"></span></div>
+    </div>
+    <div th:unless="${team}">Non esiste</div>
+  </body>
 </html>
