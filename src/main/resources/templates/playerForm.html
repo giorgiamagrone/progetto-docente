@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Player Form</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+<h1 th:text="${#strings.isEmpty(player.id) ? 'Add New Player' : 'Edit Player'}">Player Form</h1>
+
+<!-- Form per aggiungere o modificare un giocatore -->
+<form th:action="@{/players/save}" th:object="${player}" method="post">
+
+    <!-- Nome del giocatore -->
+    <label for="name">First Name:</label>
+    <input type="text" id="name" th:field="*{name}" placeholder="name" required /><br/>
+
+    <!-- Cognome del giocatore -->
+    <label for="surname">Last Name:</label>
+    <input type="text" id="surname" th:field="*{surname}" placeholder="surname" required /><br/>
+
+    <!-- Data di nascita -->
+    <label for="year">Birth Date:</label>
+    <input type="date" id="year" th:field="*{year}" required /><br/>
+
+    <!-- Luogo di nascita -->
+    <label for="city">Birth Place:</label>
+    <input type="text" id="city" th:field="*{city}" placeholder="city" required /><br/>
+
+    <!-- Ruolo del giocatore -->
+    <label for="role">Role:</label>
+    <input type="text" id="role" th:field="*{role}" placeholder="Role (e.g. Goalkeeper)" required /><br/>
+
+    <!-- Data di inizio tesseramento -->
+    <label for="startCarreer">Start Date:</label>
+    <input type="date" id="startCarreer" th:field="*{startCarreer}" required /><br/>
+
+    <!-- Data di fine tesseramento (facoltativa) -->
+    <label for="stopCarreer">End Date (optional):</label>
+    <input type="date" id="stopCarreer" th:field="*{stopCarreer}" /><br/>
+
+    <!-- Selezione della squadra (dropdown) -->
+    <label for="team">Team:</label>
+    <select id="team" th:field="*{team.id}">
+        <option th:each="team : ${teams}" th:value="${team.id}" th:text="${team.name}"></option>
+    </select><br/>
+
+    <!-- Bottone per inviare il form -->
+    <button type="submit">Save</button>
+
+</form>
+
+<a th:href="@{/teams}">Back to Team List</a>
+
+</body>
+</html>

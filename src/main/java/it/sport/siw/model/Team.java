@@ -1,22 +1,49 @@
 package it.sport.siw.model;
 
 import java.util.Objects;
+import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Team {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+	@NotBlank
 	private String name;
+	@NotNull
 	private Integer year;
 	private String address;
+
+	@OneToOne(cascade = CascadeType.ALL)
+    private President president;
+    
+	@OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private Set<Player> players;
+
 	
+	public President getPresident() {
+		return president;
+	}
+	public void setPresident(President president) {
+		this.president = president;
+	}
+	public Set<Player> getPlayers() {
+		return players;
+	}
+	public void setPlayers(Set<Player> players) {
+		this.players = players;
+	}
 	public String getName() {
 		return name;
 	}

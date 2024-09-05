@@ -1,22 +1,29 @@
 package it.sport.siw.model;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 @Entity
 public class President {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	//private Long id;
-	
+	private Long id;
+	@NotBlank
 	private String name;
+	@NotBlank
 	private String surname;
+	@NotBlank
 	private String cf;
+	@NotBlank
 	private String city;
-	private String year;
+	@NotNull
+	private LocalDate year;
 	
 	public String getName() {
 		return name;
@@ -42,10 +49,10 @@ public class President {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public String getYear() {
+	public  LocalDate getYear() {
 		return year;
 	}
-	public void setYear(String year) {
+	public void setYear( LocalDate year) {
 		this.year = year;
 	}
 	@Override
