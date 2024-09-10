@@ -1,3 +1,4 @@
+package it.sport.siw.authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import static it.sport.siw.model.Credentials.ADMIN_ROLE;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 import javax.sql.DataSource;
 
@@ -44,16 +48,16 @@ import javax.sql.DataSource;
 
     @Bean
     protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception{
-        httpSecurity
+        httpSecurity	
                 .csrf().and().cors().disable()
                 .authorizeHttpRequests()
-//                .requestMatchers("/**").permitAll()
+//                .requestMatchers("/").permitAll()
                 // chiunque (autenticato o no) può accedere alle pagine index, login, register, ai css e alle immagini
-                .requestMatchers(HttpMethod.GET,"/","/index","/register","/css/**", "/images/**", "favicon.ico").permitAll()
+                .requestMatchers(HttpMethod.GET,"/","/index", "/login", "/register","/css/").permitAll()
         		// chiunque (autenticato o no) può mandare richieste POST al punto di accesso per login e register 
                 .requestMatchers(HttpMethod.POST,"/register", "/login").permitAll()
-                .requestMatchers(HttpMethod.GET,"/admin/**").hasAnyAuthority(ADMIN_ROLE)
-                .requestMatchers(HttpMethod.POST,"/admin/**").hasAnyAuthority(ADMIN_ROLE)
+                .requestMatchers(HttpMethod.GET,"/admin/").hasAnyAuthority(ADMIN_ROLE)
+                .requestMatchers(HttpMethod.POST,"/admin/").hasAnyAuthority(ADMIN_ROLE)
         		// tutti gli utenti autenticati possono accere alle pagine rimanenti 
                 .anyRequest().authenticated()
                 // LOGIN: qui definiamo il login
@@ -64,7 +68,7 @@ import javax.sql.DataSource;
                 .failureUrl("/login?error=true")
                 // LOGOUT: qui definiamo il logout
                 .and()
-                .logout()
+                .logout()	
                 // il logout è attivato con una richiesta GET a "/logout"
                 .logoutUrl("/logout")
                 // in caso di successo, si viene reindirizzati alla home
@@ -74,5 +78,5 @@ import javax.sql.DataSource;
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .clearAuthentication(true).permitAll();
         return httpSecurity.build();
-    }
+    }
 }

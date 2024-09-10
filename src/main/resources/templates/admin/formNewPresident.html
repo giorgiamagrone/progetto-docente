@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuovo Presidente</title>
+    <link rel="stylesheet" href="/css/stile.css">
+</head>
+<body>
+    <h1>Inserisci Nuovo Presidente</h1>
+    
+    <form action="/admin/president" method="post">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="surname">Cognome:</label>
+        <input type="text" id="surname" name="surname" required><br>
+
+        <label for="cf">Codice Fiscale:</label>
+        <input type="text" id="cf" name="cf" required><br>
+
+        <label for="year">Data di Nascita:</label>
+        <input type="date" id="year" name="year" required><br>
+
+        <label for="city">Luogo di Nascita:</label>
+        <input type="text" id="city" name="city" required><br>
+
+        <button type="submit">Aggiungi Presidente</button>
+    </form>
+
+    <a href="/admin">Torna all'amministrazione</a>
+</body>
+</html>

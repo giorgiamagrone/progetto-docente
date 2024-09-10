@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dettagli Giocatore</title>
+    <link rel="stylesheet" href="/css/stile.css">
+</head>
+<body>
+    <h1 th:text="${player.name}">Dettagli Giocatore</h1>
+    <div th:if="${player}">
+        <p><strong>Nome:</strong> <span th:text="${player.name}"></span></p>
+        <p><strong>Cognome:</strong> <span th:text="${player.surname}"></span></p>
+        <p><strong>Data di Nascita:</strong> <span th:text="${player.birthDate}"></span></p>
+        <p><strong>Luogo di Nascita:</strong> <span th:text="${player.birthPlace}"></span></p>
+        <p><strong>Ruolo:</strong> <span th:text="${player.role}"></span></p>
+        <p><strong>Inizio Tesseramento:</strong> <span th:text="${player.registrationStart}"></span></p>
+        <p><strong>Fine Tesseramento:</strong> <span th:text="${player.registrationEnd}"></span></p>
+    </div>
+    <div th:unless="${player}">
+        <p>Giocatore non trovato.</p>
+    </div>
+    <a href="/players">Torna all'elenco dei giocatori</a>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elenco Giocatori</title>
+    <link rel="stylesheet" href="/css/stile.css">
+</head>
+<body>
+    <h1>Elenco Giocatori</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Data di Nascita</th>
+                <th>Ruolo</th>
+                <th>Dettagli</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="player : ${players}">
+                <td th:text="${player.name}">Nome</td>
+                <td th:text="${player.surname}">Cognome</td>
+                <td th:text="${player.birthDate}">Data di Nascita</td>
+                <td th:text="${player.role}">Ruolo</td>
+                <td><a th:href="@{/player/{id}(id=${player.id})}">Visualizza</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="/admin">Torna all'amministrazione</a>
+</body>
+</html>

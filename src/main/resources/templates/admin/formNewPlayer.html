@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inserisci Nuovo Giocatore</title>
+    <link rel="stylesheet" href="/css/stile.css">
+</head>
+<body>
+    <h1>Inserisci Nuovo Giocatore</h1>
+
+    <form action="/admin/player" method="post">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required><br>
+
+        <label for="surname">Cognome:</label>
+        <input type="text" id="surname" name="surname" required><br>
+
+        <label for="year">Data di Nascita:</label>
+        <input type="date" id="year" name="year" required><br>
+
+        <label for="city">Luogo di Nascita:</label>
+        <input type="text" id="city" name="city" required><br>
+
+        <label for="role">Ruolo:</label>
+        <input type="text" id="role" name="role" required><br>
+
+        <label for="startCarreer">Inizio Tesseramento:</label>
+        <input type="date" id="startCarreer" name="startCarreer" required><br>
+
+        <label for="stopCarreer">Fine Tesseramento:</label>
+        <input type="date" id="stopCarreer" name="stopCarreer"><br>
+
+        <button type="submit">Aggiungi Giocatore</button>
+    </form>
+
+    <a href="/admin">Torna all'amministrazione</a>
+</body>
+</html>
