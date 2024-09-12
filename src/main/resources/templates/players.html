@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<title>Team</title>
+	<title>Giocatori</title>
 	<link rel="stylesheet" href="/css/stile.css" />
 </head>
 
@@ -16,13 +17,12 @@
 		</div>
 	</header>
 
-	
-	<h1>Team che soddisfano i requisiti</h1>
-	<div th:if="${teams.isEmpty()}">Non ci sono team che soddisfano i requisiti</div>
-	<ul th:if="${!teams.isEmpty()}">
-		<li th:each="team : ${teams}">
-			<a href="team.html" th:href="@{'/team' + '/' + ${team.id}}"
-				th:text="${team.name} + ' (' + ${team.year} + ')' + ' (' + ${team.address} + ')'"></a>
+	<h1>Giocatori</h1>
+	<div th:if="${players==null || players.isEmpty()}">Non ci sono giocatori nel sistema</div>
+	<ul>
+		<li th:each="player : ${players}">
+			<a th:href="@{'/player' + '/' + ${player.id}}"
+				th:text="${player.name} + ' ' + ${player.surname}"></a>
 		</li>
 	</ul>
 	<div>

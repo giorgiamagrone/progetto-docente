@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Modifica Squadra</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+<body>
+    <header>
+		<div th:if="${userDetails}">
+		    <span th:text="${userDetails.username}"></span>
+		    <a href="/logout">Logout</a>
+		</div> 
+
+    </header>
+
+    <h1>Modifica Squadra</h1>
+
+    <form action="#" th:action="@{/admin/formEditTeam/{id}(id=${team.id})}" th:object="${team}" method="post">
+        <!-- Campo per il nome della squadra -->
+        <div>
+            <label for="name">Nome Squadra:</label>
+            <input type="text" id="name" th:field="*{name}" placeholder="Inserisci il nome della squadra" required />
+        </div>
+
+        <!-- Campo per l'anno di fondazione -->
+        <div>
+            <label for="year">Anno di Fondazione:</label>
+            <input type="number" id="year" th:field="*{year}" placeholder="Inserisci l'anno di fondazione" required />
+        </div>
+
+        <!-- Campo per l'indirizzo -->
+        <div>
+            <label for="address">Indirizzo della Sede:</label>
+            <input type="text" id="address" th:field="*{address}" placeholder="Inserisci l'indirizzo" />
+        </div>
+
+
+        <!-- Pulsante per salvare le modifiche -->
+        <div>
+            <button type="submit">Salva Modifiche</button>
+        </div>
+    </form>
+
+    <!-- Link per annullare le modifiche e tornare alla visualizzazione della squadra -->
+    <div>
+        <a th:href="@{/team/{id}(id=${team.id})}">Annulla</a>
+    </div>
+</body>
+</html>

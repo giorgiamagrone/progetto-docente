@@ -13,70 +13,72 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import static it.sport.siw.model.Credentials.ADMIN_ROLE;
-import static org.springframework.security.config.Customizer.withDefaults;
-
 import javax.sql.DataSource;
+import static it.sport.siw.model.Credentials.ADMIN_ROLE;
+import static it.sport.siw.model.Credentials.PRESIDENT_ROLE;
 
 @Configuration
 @EnableWebSecurity
-//public  class WebSecurityConfig {
-	public class AuthConfiguration {
+public class AuthConfiguration {
 
     @Autowired
     private DataSource dataSource;
+    
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth)
-            throws Exception {
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .authoritiesByUsernameQuery("SELECT username, role from credentials WHERE username=?")
-                .usersByUsernameQuery("SELECT username, password, 1 as enabled FROM credentials WHERE username=?");
+            .dataSource(dataSource)
+            .authoritiesByUsernameQuery("SELECT username, role FROM credentials WHERE username=?")
+            .usersByUsernameQuery("SELECT username, password, 1 as enabled FROM credentials WHERE username=?");
     }
-    
-    @Bean
+   /*@Bean
     public PasswordEncoder passwordEncoder(){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String rawPassword = "password";
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        System.out.println("Password criptata: " + encodedPassword);
+        return passwordEncoder;
+    }*/
+   
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // Esporre il bean AuthenticationManager
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    protected SecurityFilterChain configure(final HttpSecurity httpSecurity) throws Exception{
-        httpSecurity	
-                .csrf().and().cors().disable()
-                .authorizeHttpRequests()
-//                .requestMatchers("/").permitAll()
-                // chiunque (autenticato o no) può accedere alle pagine index, login, register, ai css e alle immagini
-                .requestMatchers(HttpMethod.GET,"/","/index", "/login", "/register","/css/").permitAll()
-        		// chiunque (autenticato o no) può mandare richieste POST al punto di accesso per login e register 
-                .requestMatchers(HttpMethod.POST,"/register", "/login").permitAll()
-                .requestMatchers(HttpMethod.GET,"/admin/").hasAnyAuthority(ADMIN_ROLE)
-                .requestMatchers(HttpMethod.POST,"/admin/").hasAnyAuthority(ADMIN_ROLE)
-        		// tutti gli utenti autenticati possono accere alle pagine rimanenti 
-                .anyRequest().authenticated()
-                // LOGIN: qui definiamo il login
-                .and().formLogin()
-                .loginPage("/login")
-                .permitAll()
+    public SecurityFilterChain configure(HttpSecurity httpSecurity) throws Exception {
+        httpSecurity
+        .csrf().and().cors().disable()
+            .authorizeRequests()
+            //.requestMatchers(HttpMethod.GET, "/teams/**").permitAll()  // Permetti agli utenti non autenticati di vedere le squadre
+         //   .requestMatchers(HttpMethod.GET, "/team/**").permitAll()   // Permetti ai non autenticati di vedere i dettagli di una squadra
+            .requestMatchers(HttpMethod.POST, "/admin/**").hasAnyAuthority("ADMIN")  // Accesso riservato all'amministratore
+            .requestMatchers(HttpMethod.POST, "/president/**").hasAnyAuthority("PRESIDENT")  // Accesso riservato al presidente
+            .requestMatchers(HttpMethod.GET, "/admin/**").hasAnyAuthority("ADMIN")  // Accesso riservato all'amministratore
+            .requestMatchers(HttpMethod.GET, "/president/**").hasAnyAuthority("PRESIDENT")  // Accesso riservato al presidente
+
+                .anyRequest().permitAll()
+            .and()
+            .formLogin()
+                .loginPage("/login").permitAll()
                 .defaultSuccessUrl("/success", true)
                 .failureUrl("/login?error=true")
-                // LOGOUT: qui definiamo il logout
-                .and()
-                .logout()	
-                // il logout è attivato con una richiesta GET a "/logout"
-                .logoutUrl("/logout")
-                // in caso di successo, si viene reindirizzati alla home
-                .logoutSuccessUrl("/")
+            .and()
+            .logout()
+                .logoutSuccessUrl("/index")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .clearAuthentication(true).permitAll();
+
         return httpSecurity.build();
-    }
+    }
 }
+

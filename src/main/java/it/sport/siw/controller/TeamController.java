@@ -3,77 +3,121 @@ package it.sport.siw.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.util.Optional;
+
+import it.sport.siw.controller.validator.TeamValidator;
 import it.sport.siw.model.Team;
+import it.sport.siw.repository.PresidentRepository;
 import it.sport.siw.repository.TeamRepository;
+//import it.sport.siw.service.TeamService;
+import jakarta.validation.Valid;
 
 @Controller
 public class TeamController {
+	// @Autowired
+	// private TeamService teamService;
 
-    @Autowired 
-    TeamRepository teamRepository;
-    
-    // Homepage
-    @GetMapping("/index.html")
-    public String index() {
-        return "index.html";
+	@Autowired
+	private TeamRepository teamRepository;
+	@Autowired
+	private TeamValidator teamValidator;
+
+	@GetMapping("/index")
+	public String index() {
+		return "index";
+	}
+
+	@GetMapping("/team/{id}")
+	public String getTeam(@PathVariable("id") Long id, Model model) {
+		model.addAttribute("team", this.teamRepository.findById(id).get());
+		return "team";
+	}
+	
+	@GetMapping("/team")
+	public String showTeams(Model model) {
+		model.addAttribute("teams", this.teamRepository.findAll());
+		return "teams";
+	}
+
+	@PostMapping("/team")
+	public String newTeam(@Valid @ModelAttribute("team") Team team, BindingResult bindingResult, Model model) {
+
+	    this.teamValidator.validate(team, bindingResult);
+	    if (!bindingResult.hasErrors()) {
+	        this.teamRepository.save(team);
+	        model.addAttribute("team", team);
+	        return "team.html";
+	    } else {
+	        return "admin/formNewTeam";
+	    }
+	}
+	@GetMapping("/admin/formNewTeam")
+	public String formNewTeam(Model model) {
+	    model.addAttribute("team", new Team());
+	    return "admin/formNewTeam";
+	}
+
+	@GetMapping("/formSearchTeam")
+	public String formSearchTeams(Model model) {
+	    model.addAttribute("teamSearch", new Team()); 
+	    return "formSearchTeam";  
+	}
+
+	@PostMapping("/formSearchTeam")
+	public String searchTeams(Model model, @RequestParam("year") int year) {
+	    model.addAttribute("teams", this.teamRepository.findByYear(year));
+	    return "foundTeam";
+	}
+
+    // Metodo per visualizzare il form di modifica per una squadra esistente
+    @GetMapping("/admin/formEditTeam/{id}")
+    public String formEditTeam(@PathVariable("id") Long id, Model model) {
+        Team team = this.teamRepository.findById(id).orElse(null);
+        
+        if (team == null) {
+            return "redirect:/error"; // Reindirizza a una pagina di errore se il team non esiste
+        }
+
+        model.addAttribute("team", team);
+        return "admin/formEditTeam"; // Mostra il form di modifica dei dettagli della squadra
     }
 
-    // Visualizza il form per aggiungere una nuova squadra
-    @GetMapping("/formNewTeam")
-    public String formNewTeam(Model model) {
-        model.addAttribute("team", new Team());
-        return "formNewTeam.html"; // Carica il form per aggiungere una nuova squadra
-    }
+    // Metodo per aggiornare una squadra esistente
+    @PostMapping("/admin/formEditTeam/{id}")
+    public String updateTeam(@PathVariable("id") Long id, @Valid @ModelAttribute("team") Team team, BindingResult bindingResult, Model model) {
+        // Validiamo i dati della squadra
+        this.teamValidator.validate(team, bindingResult);
+        if (!bindingResult.hasErrors()) {
+            // Recuperiamo la squadra esistente dal database
+            Team existingTeam = this.teamRepository.findById(id).orElse(null);
+            if (existingTeam == null) {
+                return "redirect:/error"; // Se la squadra non esiste, reindirizza a una pagina di errore
+            }
 
-    // Salva una nuova squadra
-    @PostMapping("/team")
-    public String newTeam(@ModelAttribute("team") Team team, Model model) {
-        if (!teamRepository.existsByNameAndYear(team.getName(), team.getYear())) {
-            this.teamRepository.save(team);
+            // Aggiorniamo solo i campi della squadra, senza modificare il presidente
+            existingTeam.setName(team.getName());
+            existingTeam.setYear(team.getYear());
+            existingTeam.setAddress(team.getAddress());
+            
+            // Salviamo le modifiche
+            this.teamRepository.save(existingTeam);
+
+            // Aggiungiamo la squadra aggiornata al modello
+            model.addAttribute("team", existingTeam);
+
+            // Redirigiamo alla pagina della squadra
+            return "redirect:/team/" + id;
+        } else {
+            // In caso di errori di validazione, torniamo al form di modifica con gli errori
             model.addAttribute("team", team);
-            return "redirect:/team/" + team.getId(); // Reindirizza alla pagina dei dettagli della squadra
-        } else {
-            model.addAttribute("messaggioErrore", "Questa squadra esiste già");
-            return "formNewTeam.html"; // Ritorna al form con un messaggio di errore
+            return "admin/formEditTeam";
         }
     }
 
-    // Visualizza i dettagli di una squadra tramite il suo ID
-    @GetMapping("/team/{id}")
-    public String getTeam(@PathVariable("id") Long id, Model model) {
-        Optional<Team> team = this.teamRepository.findById(id);
-        if (team.isPresent()) {
-            model.addAttribute("team", team.get());
-            return "team.html"; // Carica la pagina dei dettagli della squadra
-        } else {
-            model.addAttribute("messaggioErrore", "Squadra non trovata");
-            return "redirect:/team"; // Reindirizza all'elenco delle squadre se l'ID non esiste
-        }
     }
 
-    // Visualizza tutte le squadre
-    @GetMapping("/team")
-    public String showTeams(Model model) {
-        model.addAttribute("teams", this.teamRepository.findAll());
-        return "teams.html"; // Carica la pagina che mostra tutte le squadre
-    }
-
-    // Visualizza il form per cercare una squadra per anno
-    @GetMapping("/formSearchTeams")
-    public String formSearchTeam() {
-        return "formSearchTeams.html"; // Carica il form di ricerca per anno
-    }
-
-    // Cerca squadre per anno
-    @PostMapping("/searchTeams")
-    public String searchTeams(Model model, @RequestParam Integer year) {
-        model.addAttribute("teams", this.teamRepository.findByYear(year));
-        return "foundTeam.html"; // Carica la pagina con i risultati della ricerca
-    }
-}

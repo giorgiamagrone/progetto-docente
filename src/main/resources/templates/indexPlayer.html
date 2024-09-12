@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>
+			SiwSport - Gestione Giocatori
+		</title>
+		<link rel="stylesheet" href="/css/stile.css" />
+	</head>
+<body>
+	<header>
+		<div th:if="${userDetails}">
+			<span th:text="${userDetails.username}"></span>
+			<a href="/logout">Logout</a>
+		</div>
+		<div th:unless="${user}">
+			<a href="/login">Login</a>
+		</div>
+	</header>
+
+		<h1>Gestione Giocatori</h1>
+		<div>
+			<a href="/admin/formNewPlayer">Inserisci i dati di un giocatore</a>
+		</div>
+		<div>
+			<a href="/player">Giocatori</a>
+		</div>
+		<div>
+    <a th:href="@{/}">Torna alla Home</a>
+  </div>
+	</body>
+</html>

@@ -2,17 +2,19 @@ package it.sport.siw.model;
 
 import java.time.LocalDate;
 import java.util.Objects;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
 @Entity
 public class President {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	@NotBlank
 	private String name;
@@ -23,8 +25,18 @@ public class President {
 	@NotBlank
 	private String city;
 	@NotNull
-	private LocalDate year;
+	private LocalDate dateOfBirth;
 	
+	 @ManyToOne
+	    @JoinColumn(name = "team_id")
+	    private Team team;
+	 
+	public Team getTeam() {
+		return team;
+	}
+	public void setTeam(Team team) {
+		this.team = team;
+	}
 	public String getName() {
 		return name;
 	}
@@ -49,15 +61,22 @@ public class President {
 	public void setCity(String city) {
 		this.city = city;
 	}
-	public  LocalDate getYear() {
-		return year;
+	
+	public Long getId() {
+		return id;
 	}
-	public void setYear( LocalDate year) {
-		this.year = year;
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
+	}
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(cf, city, name, surname, year);
+		return Objects.hash(cf, city, dateOfBirth, name, surname);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -68,9 +87,8 @@ public class President {
 		if (getClass() != obj.getClass())
 			return false;
 		President other = (President) obj;
-		return Objects.equals(cf, other.cf) && Objects.equals(city, other.city) && Objects.equals(name, other.name)
-				&& Objects.equals(surname, other.surname) && Objects.equals(year, other.year);
+		return Objects.equals(cf, other.cf) && Objects.equals(city, other.city)
+				&& Objects.equals(dateOfBirth, other.dateOfBirth) && Objects.equals(name, other.name)
+				&& Objects.equals(surname, other.surname);
 	}
-	
-	
 }

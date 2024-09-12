@@ -1,49 +1,44 @@
 <!DOCTYPE html>
-<html lang="it">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amministrazione Federazione</title>
-    <link rel="stylesheet" href="/css/stile.css">
+	<title>
+		SiwSport - Homepage
+	</title>
+	<link rel="stylesheet" href="/css/stile.css" />
 </head>
+
 <body>
-    <h1>Amministrazione Federazione</h1>
+	<header>
+		<div th:if="${userDetails}">
+			<span th:text="${userDetails.username}"></span>
+			<a href="/logout">Logout</a>
+		</div>
+	</header>
 
-    <div>
-        <h2>Gestione Squadre</h2>
-        <ul>
-            <li><a href="/admin/formNewTeam">Inserisci Nuova Squadra</a></li>
-            <li><a href="/admin/teamList">Visualizza tutte le Squadre</a></li>
-        </ul>
-    </div>
+	<h1>Operazioni per amministratore</h1>
 
-    <div>
-        <h2>Gestione Giocatori</h2>
-        <ul>
-            <li><a href="/admin/formNewPlayer">Inserisci Nuovo Giocatore</a></li>
-            <li><a href="/admin/playerList">Visualizza tutti i Giocatori</a></li>
-        </ul>
-    </div>
+	<!-- Modifica e gestione squadre -->
+	<h2>Gestione Squadre</h2>
+	<div>
+		<a href="/admin/formNewTeam">Aggiungi una nuova squadra</a>
+	</div>
+	<div>
+		<a href="/admin/formEditTeam">Modifica squadre esistenti</a>
+	</div>
 
-    <div>
-        <h2>Gestione Presidenti</h2>
-        <ul>
-            <li><a href="/admin/formNewPresident">Inserisci Nuovo Presidente</a></li>
-            <li><a href="/admin/presidentList">Visualizza tutti i Presidenti</a></li>
-        </ul>
-    </div>
-
-    <div>
-        <h2>Ricerca e Filtri</h2>
-        <ul>
-            <li><a href="/admin/searchTeams">Cerca Squadra per Anno</a></li>
-            <li><a href="/admin/searchPlayers">Cerca Giocatore per Ruolo</a></li>
-        </ul>
-    </div>
-
-    <div>
-        <a href="/">Torna alla Homepage</a>
-    </div>
+	<!-- Gestione Presidenti -->
+	<h2>Gestione Presidenti</h2>
+	<div>
+		<a href="/admin/formNewPresident">Inserisci un presidente</a>
+	</div>
+	<div>
+		<a href="/admin/formEditPresident">Modifica presidente</a>
+	</div>
+	<div>
+		<a href="/admin/formDeletePresident">Elimina presidente</a>
+	</div>
 
 </body>
+
 </html>

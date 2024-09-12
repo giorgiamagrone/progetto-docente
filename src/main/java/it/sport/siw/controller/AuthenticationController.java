@@ -1,85 +1,98 @@
 package it.sport.siw.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import it.sport.siw.model.Credentials;
-import it.sport.siw.model.User;
 import it.sport.siw.service.CredentialsService;
-import it.sport.siw.service.UserService;
-import jakarta.validation.Valid;
 
 @Controller
 public class AuthenticationController {
 
-	@Autowired
-	private CredentialsService credentialsService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private CredentialsService credentialsService;
 
-	@GetMapping("/formRegisterUser")
-	public String showRegisterForm(Model model) {
-		model.addAttribute("user", new User());
-		model.addAttribute("credentials", new Credentials());
-		return "formRegisterUser";
-	}
+    // Pagina di login
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
 
-	@GetMapping("/login")
-	public String showLoginForm(Model model) {
-		return "formLogin";
-	}
+    // Gestione del login fallito
+    @GetMapping("/failure")
+    public String failure(Model model) {
+        model.addAttribute("errorLogin", "Username o password errati!");
+        return "login";
+    }
 
-	@GetMapping("/")
-	public String index(Model model) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication instanceof AnonymousAuthenticationToken) {
-			return "index";
-		} else {
-			UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
-			if (credentials.getRole().equals(Credentials.ADMIN_ROLE)) {
-				return "admin/indexAdmin";
-			}
-		}
-		return "index";
-	}
 
-	@GetMapping("/registrationSuccessful")
-	public String defaultAfterLogin(Model model) {
+ // Gestione del successo post-login
+    @GetMapping("/success")
+    public String loginSuccess(Model model) {
+        // Recupera l'utente autenticato dal SecurityContext
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-		UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
-		if (credentials.getRole().equals(Credentials.ADMIN_ROLE)) {
-			return "admin/indexAdmin";
-		}
-		return "index";
-	}
+        // Recupera le credenziali dal database usando lo username dell'utente autenticato
+        Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
 
-	@PostMapping("/formRegisterUser")
-    public String registerUser(@Valid @ModelAttribute("user") User user,
-                 BindingResult userBindingResult, @Valid
-                 @ModelAttribute("credentials") Credentials credentials,
-                 BindingResult credentialsBindingResult,
-                 Model model) {
-
-		// se user e credential hanno entrambi contenuti validi, memorizza User e the Credentials nel DB
-        if(!userBindingResult.hasErrors() && !credentialsBindingResult.hasErrors()) {
-            userService.saveUser(user);
-            credentials.setUser(user);
-            credentialsService.saveCredentials(credentials);
-            model.addAttribute("user", user);
-            return "registrationSuccessful";
+        // Verifica il ruolo e reindirizza alla pagina corretta
+        if (credentials.getRole().equals(Credentials.ADMIN_ROLE)) {
+            model.addAttribute("admin", credentials);
+            return "redirect:/admin/indexAdmin";  // Reindirizza alla dashboard admin
+        } else if (credentials.getRole().equals(Credentials.PRESIDENT_ROLE)) {
+            model.addAttribute("president", credentials);
+            return "redirect:/president/indexPresident";  // Reindirizza alla dashboard del presidente
+        } else {
+            return "redirect:/login?error=true";  // In caso di errore, reindirizza al login con errore
         }
-        return "formRegisterUser";
-    }
+    }
+    // Index Admin: Gestito dall'amministratore
+    @GetMapping("/admin/indexAdmin")
+    public String indexAdmin(Model model) {
+        // Recupera l'utente autenticato
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        // Aggiungi i dettagli dell'admin al modello
+        Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
+        model.addAttribute("admin", credentials);
+
+        // Ritorna alla vista dell'index per l'admin
+        return "admin/indexAdmin";  // Nome del template HTML per la pagina dell'admin
+    }
+
+    // Index President: Gestito dal presidente
+   /* @GetMapping("/president/indexPresident")
+    public String indexPresident(Model model) {
+        // Recupera l'utente autenticato
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        // Aggiungi i dettagli del presidente al modello
+        Credentials credentials = credentialsService.getCredentials(userDetails.getUsername());
+        model.addAttribute("president", credentials);
+
+        // Ritorna alla vista dell'index per il presidente
+        return "president/indexPresident";  // Nome del template HTML per la pagina del presidente
+    }*/
+    
+    // Logout
+    @GetMapping("/logout")
+    public String logout() {
+        SecurityContextHolder.clearContext();
+        return "redirect:/login";
+    }
 }

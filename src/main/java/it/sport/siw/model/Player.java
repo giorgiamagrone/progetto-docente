@@ -3,9 +3,7 @@ package it.sport.siw.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,42 +11,39 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Player {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
 	@NotBlank
 	private String name;
 
 	@NotBlank
 	private String surname;
-	@NotBlank
+
 	private String city;
+
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@NotNull
-	private LocalDate year;
-	@NotBlank
+	private LocalDate dateOfBirth;
+
 	private String role;
-	@NotNull
 	private LocalDateTime startCarreer;
-	@NotNull
 	private LocalDateTime stopCarreer;
 	
 	@ManyToOne
-    @JoinColumn(name = "team_id")
-    private Team team;
-	
-	public Team getTeam() {
-        return team;
-    }
+	@JoinColumn(name = "team_id")
+	private Team team;
 
-    public void setTeam(Team team) {
-        this.team = team;
-    }
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -73,12 +68,12 @@ public class Player {
 		this.city = city;
 	}
 
-	public LocalDate getYear() {
-		return year;
+	public LocalDate getDateOfBirth() {
+		return dateOfBirth;
 	}
 
-	public void setYear(LocalDate year) {
-		this.year = year;
+	public void setDateOfBirth(LocalDate dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public String getRole() {
@@ -101,13 +96,21 @@ public class Player {
 		return stopCarreer;
 	}
 
-	public void setStopCarrer(LocalDateTime stopCarreer) {
+	public void setStopCarreer(LocalDateTime stopCarreer) {
 		this.stopCarreer = stopCarreer;
+	}
+
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, role, startCarreer, stopCarreer, surname, year);
+		return Objects.hash(city, dateOfBirth, id, name, role, startCarreer, stopCarreer, surname);
 	}
 
 	@Override
@@ -119,9 +122,10 @@ public class Player {
 		if (getClass() != obj.getClass())
 			return false;
 		Player other = (Player) obj;
-		return Objects.equals(name, other.name) && Objects.equals(role, other.role)
+		return Objects.equals(city, other.city) && Objects.equals(dateOfBirth, other.dateOfBirth)
+				&& Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(role, other.role)
 				&& Objects.equals(startCarreer, other.startCarreer) && Objects.equals(stopCarreer, other.stopCarreer)
-				&& Objects.equals(surname, other.surname) && Objects.equals(year, other.year);
+				&& Objects.equals(surname, other.surname);
 	}
 
 }

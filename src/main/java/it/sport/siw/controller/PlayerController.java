@@ -7,11 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import it.sport.siw.model.Player;
 import it.sport.siw.repository.PlayerRepository;
-
-import java.util.Optional;
 
 @Controller
 public class PlayerController {
@@ -19,49 +18,100 @@ public class PlayerController {
     @Autowired 
     private PlayerRepository playerRepository;
 
-    // Visualizza il form per aggiungere un nuovo giocatore
-    @GetMapping(value = "/admin/formNewPlayer")
+    // Form per aggiungere un nuovo giocatore - Gestito dal presidente
+    @GetMapping(value="/president/formNewPlayer")
     public String formNewPlayer(Model model) {
         model.addAttribute("player", new Player());
-        return "admin/formNewPlayer"; // Assicurati che questo percorso corrisponda alla tua directory dei template
-    }
-    
-    // Visualizza l'indexPlayer
-    @GetMapping(value = "/admin/indexPlayer")
-    public String indexPlayer() {
-        return "admin/indexPlayer";
+        return "president/formNewPlayer";
     }
 
-    // Aggiungi un nuovo giocatore
-    @PostMapping("/admin/player")
+    // Pagina di gestione dei giocatori - Gestito dal presidente
+    @GetMapping(value="/president/indexPlayer")
+    public String indexPlayer() {
+        return "president/indexPlayer";
+    }
+
+    // Aggiunta di un nuovo giocatore - Gestito dal presidente
+    @PostMapping("/president/player")
     public String newPlayer(@ModelAttribute("player") Player player, Model model) {
         if (!playerRepository.existsByNameAndSurname(player.getName(), player.getSurname())) {
             this.playerRepository.save(player);
             model.addAttribute("player", player);
-            return "player"; // Assicurati che il file player.html esista nella directory corretta
+            return "player";
         } else {
             model.addAttribute("messaggioErrore", "Questo giocatore esiste già");
-            return "admin/formNewPlayer"; // Ritorna alla form con il messaggio di errore
+            return "president/formNewPlayer";
         }
     }
 
-    // Visualizza i dettagli di un giocatore tramite il suo ID
+    // Dettagli di un singolo giocatore
     @GetMapping("/player/{id}")
     public String getPlayer(@PathVariable("id") Long id, Model model) {
-        Optional<Player> player = this.playerRepository.findById(id);
-        if (player.isPresent()) {
-            model.addAttribute("player", player.get());
-            return "player"; // Carica la pagina player.html con i dettagli del giocatore
-        } else {
-            model.addAttribute("messaggioErrore", "Giocatore non trovato");
-            return "redirect:/player"; // Reindirizza alla lista dei giocatori se il giocatore non esiste
-        }
+        model.addAttribute("player", this.playerRepository.findById(id).get());
+        return "player";
     }
 
-    // Visualizza l'elenco completo dei giocatori
+    // Lista di tutti i giocatori
     @GetMapping("/player")
     public String getPlayers(Model model) {
         model.addAttribute("players", this.playerRepository.findAll());
-        return "players"; // Carica la pagina players.html che mostra l'elenco dei giocatori
+        return "players";
+    }
+
+    // Form per eliminare un giocatore - Gestito dal presidente
+    @GetMapping("/president/formDeletePlayer")
+    public String formDeletePlayer(Model model) {
+        model.addAttribute("players", this.playerRepository.findAll());
+        return "president/formDeletePlayer";  // Mostra la vista con il form per eliminare
+    }
+
+    // Eliminazione di un giocatore - Gestito dal presidente
+    @PostMapping("/president/player/delete")
+    public String deletePlayer(@RequestParam("Id") Long Id, Model model) {
+        if (this.playerRepository.existsById(Id)) {
+            this.playerRepository.deleteById(Id);
+            model.addAttribute("messaggioSuccesso", "Giocatore eliminato con successo");
+        } else {
+            model.addAttribute("messaggioErrore", "Giocatore non trovato");
+        }
+        model.addAttribute("players", this.playerRepository.findAll());
+        return "president/formDeletePlayer";  // Torna alla vista con il form per eliminare
+    }
+ // Form per modificare un giocatore - Gestito dal presidente
+    @GetMapping("/president/formEditPlayer/{id}")
+    public String formEditPlayer(@PathVariable("id") Long id, Model model) {
+        Player player = this.playerRepository.findById(id).orElse(null);
+        if (player != null) {
+            model.addAttribute("player", player);
+            return "president/formEditPlayer";  // Mostra la vista con il form per modificare
+        } else {
+            model.addAttribute("messaggioErrore", "Giocatore non trovato");
+            return "president/indexPlayer";  // Se il giocatore non esiste, ritorna alla pagina principale
+        }
+    }
+
+    // Modifica di un giocatore esistente - Gestito dal presidente
+    @PostMapping("/president/player/edit/{id}")
+    public String editPlayer(@PathVariable("id") Long id, 
+                             @ModelAttribute("player") Player updatedPlayer, 
+                             Model model) {
+        Player existingPlayer = this.playerRepository.findById(id).orElse(null);
+        if (existingPlayer != null) {
+            // Aggiorna i dati del giocatore
+            existingPlayer.setName(updatedPlayer.getName());
+            existingPlayer.setSurname(updatedPlayer.getSurname());
+            existingPlayer.setCity(updatedPlayer.getCity());
+            existingPlayer.setDateOfBirth(updatedPlayer.getDateOfBirth());
+            existingPlayer.setRole(updatedPlayer.getRole());
+
+            // Salva le modifiche
+            this.playerRepository.save(existingPlayer);
+            model.addAttribute("player", existingPlayer);
+            model.addAttribute("messaggioSuccesso", "Giocatore aggiornato con successo");
+            return "player";  // Mostra la vista con i dettagli aggiornati del giocatore
+        } else {
+            model.addAttribute("messaggioErrore", "Giocatore non trovato");
+            return "president/indexPlayer";  // Se il giocatore non esiste, ritorna alla pagina principale
+        }
     }
 }

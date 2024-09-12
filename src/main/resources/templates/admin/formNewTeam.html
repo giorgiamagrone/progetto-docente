@@ -1,24 +1,56 @@
-<!DOCTYPE html>
-<html>
-  <head>
+  <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
     <title>Nuovo Team</title>
     <link rel="stylesheet" href="/stile.css?version=3" />
-  </head>
-  <body>
+</head>
+<body>
     <h1>Aggiungi un team</h1>
     <form th:action="@{/team}" method="POST" th:object="${team}">
-<div>
-       Nome: <span><input required type="text" th:field="${team.name}"/></span>
-      </div>
-      <div>
-        Anno: <span><input required type="text" th:field="${team.year}"/></span>
-      </div>
-      <div>
-       Indirizzo: <span><input required type="text" th:field="${team.address}"/></span>
-      </div>
-      <div>
-        <span><button type="submit">Conferma</button></span>
-      </div>
+
+        <!-- Nome del Team -->
+        <div>
+            Nome:
+            <span>
+                <input required type="text" th:field="*{name}" />
+            </span>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+                <!-- Messaggi di errore per il campo nome -->
+            </div>
+        </div>
+
+        <!-- Anno di Fondazione -->
+        <div>
+            Anno:
+            <span>
+                <input required type="text" th:field="*{year}" />
+            </span>
+            <div th:if="${#fields.hasErrors('year')}" th:errors="*{year}">
+                <!-- Messaggi di errore per il campo anno -->
+            </div>
+        </div>
+
+        <!-- Indirizzo del Team -->
+        <div>
+            Indirizzo:
+            <span>
+                <input required type="text" th:field="*{address}" />
+            </span>
+            <div th:if="${#fields.hasErrors('address')}" th:errors="*{address}">
+                <!-- Messaggi di errore per il campo indirizzo -->
+            </div>
+        </div>
+
+        <!-- Pulsante di conferma -->
+        <div>
+            <span>
+                <button type="submit">Conferma</button>
+            </span>
+        </div>
+
     </form>
-  </body>
+
+  
+
+</body>
 </html>

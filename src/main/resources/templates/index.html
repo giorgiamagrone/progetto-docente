@@ -1,24 +1,30 @@
 <!DOCTYPE html>
-<html>
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>
-		SiwSport - Homepage
-	</title>
-	<link rel="stylesheet" href="/css/stile.css" />
+    <title>SiwSport - Homepage</title>
+    <link rel="stylesheet" href="/css/stile.css" />
 </head>
 
 <body>
-	<h1>Consulta</h1>
-	<div>
-		<a href="/team">Mostra tutte le squadre</a>
-	</div>
-	<div>
-		<a href="/formNewTeam">Inserisci una nuova squadra</a>
-	</div>
-	<div>
-		<a href="/formSearchTeams">Cerca una squadra per anno</a>
-	</div>
+    <!-- Header con opzione di logout se l'utente è autenticato -->
+    <header>
+        <div th:if="${username != null}">
+            <span>Benvenuto, <span th:text="${username}">User</span></span>
+            <a th:href="@{/logout}">Logout</a>
+        </div>
+        <div th:if="${username == null}">
+            <a th:href="@{/login}">Login</a>
+        </div>
+    </header>
+
+    <h1>Consulta</h1>
+    
+    <div>
+        <a th:href="@{/team}">Lista Squadre</a>
+    </div>
+    <div>
+        <a th:href="@{/formSearchTeam}">Cerca una squadra</a>
+    </div>
 </body>
 
 </html>

@@ -9,7 +9,7 @@ import it.sport.siw.model.Team;
 import it.sport.siw.repository.TeamRepository;
 
 @Component
-public class TeamValidator implements Validator {
+public class TeamValidator implements Validator{
 	@Autowired
 	private TeamRepository teamRepository;
 

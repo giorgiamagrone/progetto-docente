@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Modifica Giocatore</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+  </head>
+
+  <body>
+    <header>
+      <div th:if="${userDetails}">
+        <span th:text="${userDetails.username}"></span>
+        <a href="/logout">Logout</a>
+      </div>
+      <div th:unless="${user}">
+        <a href="/login">Login</a>
+      </div>
+    </header>
+
+    <h1>Modifica Giocatore</h1>
+
+    <!-- Form per modificare il giocatore -->
+    <div th:if="${player}">
+      <form action="/president/player/edit" method="post">
+        <input type="hidden" th:value="${player.id}" name="id" />
+
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" th:value="${player.name}" required />
+
+        <label for="surname">Cognome:</label>
+        <input type="text" id="surname" name="surname" th:value="${player.surname}" required />
+
+        <label for="city">Città:</label>
+        <input type="text" id="city" name="city" th:value="${player.city}" required />
+
+        <label for="dateOfBirth">Data di nascita:</label>
+        <input type="date" id="dateOfBirth" name="dateOfBirth" th:value="${player.dateOfBirth}" required />
+
+        <label for="role">Ruolo:</label>
+        <input type="text" id="role" name="role" th:value="${player.role}" required />
+
+        <button type="submit">Salva Modifiche</button>
+      </form>
+    </div>
+
+    <!-- Messaggio di errore nel caso il giocatore non sia trovato -->
+    <div th:unless="${player}">
+      <p>Giocatore non trovato.</p>
+    </div>
+
+    <!-- Messaggi di errore o successo -->
+    <div th:if="${messaggioErrore}">
+      <p th:text="${messaggioErrore}" style="color: red;"></p>
+    </div>
+    <div th:if="${messaggioSuccesso}">
+      <p th:text="${messaggioSuccesso}" style="color: green;"></p>
+    </div>
+
+   
+  </body>
+</html>

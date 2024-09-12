@@ -1,67 +1,68 @@
 package it.sport.siw.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@Table(name = "credentials") 
 public class Credentials {
 
-	public static final String DEFAULT_ROLE = "DEFAULT";
-	public static final String ADMIN_ROLE = "ADMIN";
-	public static final String PRESIDENT_ROLE = "PRESIDENT";
+    public static final String ADMIN_ROLE = "ADMIN";
+    public static final String PRESIDENT_ROLE = "PRESIDENT";
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-	private String username;
-	private String password;
-	private String role;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	private User user;
+    @NotBlank
+    private String username;
 
-	public String getUsername() {
-		return username;
-	}
+    @NotBlank
+    private String password;
 
-	public Long getId() {
-		return id;
-	}
+    @NotBlank
+    private String role;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    // Getter e Setter
 
-	public User getUser() {
-		return user;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public String getRole() {
-		return role;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setRole(String role) {
-		this.role = role;
-	}
+    public String getRole() {
+        return role;
+    }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    // Helper method per determinare se è un amministratore o presidente
+    public boolean isAdmin() {
+        return ADMIN_ROLE.equals(this.role);
+    }
+
+    public boolean isPresident() {
+        return PRESIDENT_ROLE.equals(this.role);
+    }
 }
