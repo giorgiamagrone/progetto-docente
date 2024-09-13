@@ -74,8 +74,8 @@ public class AuthenticationController {
         return "admin/indexAdmin";  // Nome del template HTML per la pagina dell'admin
     }
 
-    // Index President: Gestito dal presidente
-   /* @GetMapping("/president/indexPresident")
+ // Index President: Gestito dal presidente
+    @GetMapping("/president/indexPresident")
     public String indexPresident(Model model) {
         // Recupera l'utente autenticato
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -87,7 +87,8 @@ public class AuthenticationController {
 
         // Ritorna alla vista dell'index per il presidente
         return "president/indexPresident";  // Nome del template HTML per la pagina del presidente
-    }*/
+    }
+    
     
     // Logout
     @GetMapping("/logout")

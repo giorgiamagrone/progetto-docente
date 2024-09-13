@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Modifica Squadra</title>
     <link rel="stylesheet" href="/css/stile.css" />
 </head>
 <body>
     <header>
-		<div th:if="${userDetails}">
-		    <span th:text="${userDetails.username}"></span>
-		    <a href="/logout">Logout</a>
-		</div> 
+        <div th:if="${userDetails}">
+            <span th:text="${userDetails.username}"></span>
+            <a href="/logout">Logout</a>
 
     </header>
 
     <h1>Modifica Squadra</h1>
 
-    <form action="#" th:action="@{/admin/formEditTeam/{id}(id=${team.id})}" th:object="${team}" method="post">
+    <form th:action="@{/admin/formEditTeam/{id}(id=${team.id})}" th:object="${team}" method="POST">
         <!-- Campo per il nome della squadra -->
         <div>
             <label for="name">Nome Squadra:</label>
@@ -34,6 +33,12 @@
             <input type="text" id="address" th:field="*{address}" placeholder="Inserisci l'indirizzo" />
         </div>
 
+        <!-- Campo per modificare il presidente (separato tramite link) -->
+        <div>
+            <label for="presidentName">Presidente:</label>
+            <span th:text="${team.president != null ? team.president.name + ' ' + team.president.surname : 'Nessun Presidente'}"></span>
+            <a th:if="${team.president != null}" th:href="@{/admin/formEditPresident/{id}(id=${team.president.id})}">Modifica Presidente</a>
+        </div>
 
         <!-- Pulsante per salvare le modifiche -->
         <div>
@@ -45,5 +50,6 @@
     <div>
         <a th:href="@{/team/{id}(id=${team.id})}">Annulla</a>
     </div>
+    <a href="#" th:href="@{/admin/selectTeamToEdit}">Torna alla lista delle squadre</a>
 </body>
 </html>

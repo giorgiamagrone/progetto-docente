@@ -23,7 +23,10 @@ public class Credentials {
     @NotBlank
     private String role;
 
-    // Getter e Setter
+    // Aggiungi la relazione con il presidente
+    @OneToOne
+    @JoinColumn(name = "president_id")
+    private President president;  
 
     public Long getId() {
         return id;
@@ -57,7 +60,16 @@ public class Credentials {
         this.role = role;
     }
 
-    // Helper method per determinare se è un amministratore o presidente
+    // Getter e Setter per il Presidente
+    public President getPresident() {
+        return president;
+    }
+
+    public void setPresident(President president) {
+        this.president = president;
+    }
+
+    // Helper methods
     public boolean isAdmin() {
         return ADMIN_ROLE.equals(this.role);
     }

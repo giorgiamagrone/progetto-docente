@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Modifica Presidente</title>
+    <title>SiwSport - Modifica Presidente</title>
     <link rel="stylesheet" href="/css/stile.css" />
 </head>
-
 <body>
     <header>
         <div th:if="${userDetails}">
@@ -15,41 +13,36 @@
     </header>
 
     <h1>Modifica Presidente</h1>
-    <form th:action="@{/admin/president/edit}" th:object="${president}" method="post">
-        <!-- Campo nascosto per l'ID del presidente -->
-        <input type="hidden" th:field="*{id}" />
 
-        <!-- Campo per il nome del presidente -->
-        <label for="name">Nome:</label>
-        <input type="text" id="name" th:field="*{name}" /><br/>
+    <form th:object="${president}" th:action="@{/admin/formEditPresident/{id}(id=${president.id})}" method="post">
+        <div>
+            <label for="name">Nome</label>
+            <input type="text" id="name" th:field="*{name}" />
+        </div>
 
-        <!-- Campo per il cognome del presidente -->
-        <label for="surname">Cognome:</label>
-        <input type="text" id="surname" th:field="*{surname}" /><br/>
+        <div>
+            <label for="surname">Cognome</label>
+            <input type="text" id="surname" th:field="*{surname}" />
+        </div>
 
-        <!-- Campo per il codice fiscale -->
-        <label for="cf">Codice Fiscale:</label>
-        <input type="text" id="cf" th:field="*{cf}" /><br/>
+        <div>
+            <label for="cf">Codice Fiscale</label>
+            <input type="text" id="cf" th:field="*{cf}" />
+        </div>
 
-        <!-- Campo per la città del presidente -->
-        <label for="city">Città:</label>
-        <input type="text" id="city" th:field="*{city}" /><br/>
+        <div>
+            <label for="city">Città</label>
+            <input type="text" id="city" th:field="*{city}" />
+        </div>
 
-        <!-- Sezione per cambiare la squadra del presidente -->
-        <label for="team">Squadra Assegnata:</label>
-        <select id="team" th:field="*{team}">
-            <option value="" disabled selected>Scegli una squadra</option>
-            <!-- Ciclo per mostrare tutte le squadre disponibili -->
-            <option th:each="team : ${teams}" th:value="${team}" th:text="${team.name}"></option>
-        </select><br/>
-
-        <!-- Pulsante per salvare le modifiche -->
-        <button type="submit">Salva Modifiche</button>
+        <div>
+            <button type="submit">Salva modifiche</button>
+        </div>
     </form>
 
-    <!-- Messaggi di errore e successo -->
-    <p th:text="${messaggioErrore}" style="color:red"></p>
-    <p th:text="${messaggioSuccesso}" style="color:green"></p>
-</body>
+    <div>
+        <a href="/admin/indexAdmin">Torna alla home amministratore</a>
+    </div>
 
+</body>
 </html>

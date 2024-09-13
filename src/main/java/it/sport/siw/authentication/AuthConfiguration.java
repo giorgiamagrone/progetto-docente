@@ -57,8 +57,6 @@ public class AuthConfiguration {
         httpSecurity
         .csrf().and().cors().disable()
             .authorizeRequests()
-            //.requestMatchers(HttpMethod.GET, "/teams/**").permitAll()  // Permetti agli utenti non autenticati di vedere le squadre
-         //   .requestMatchers(HttpMethod.GET, "/team/**").permitAll()   // Permetti ai non autenticati di vedere i dettagli di una squadra
             .requestMatchers(HttpMethod.POST, "/admin/**").hasAnyAuthority("ADMIN")  // Accesso riservato all'amministratore
             .requestMatchers(HttpMethod.POST, "/president/**").hasAnyAuthority("PRESIDENT")  // Accesso riservato al presidente
             .requestMatchers(HttpMethod.GET, "/admin/**").hasAnyAuthority("ADMIN")  // Accesso riservato all'amministratore

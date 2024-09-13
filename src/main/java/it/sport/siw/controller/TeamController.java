@@ -12,112 +12,108 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import it.sport.siw.controller.validator.TeamValidator;
 import it.sport.siw.model.Team;
-import it.sport.siw.repository.PresidentRepository;
 import it.sport.siw.repository.TeamRepository;
-//import it.sport.siw.service.TeamService;
 import jakarta.validation.Valid;
 
 @Controller
 public class TeamController {
-	// @Autowired
-	// private TeamService teamService;
 
-	@Autowired
-	private TeamRepository teamRepository;
-	@Autowired
-	private TeamValidator teamValidator;
+    @Autowired
+    private TeamRepository teamRepository;
 
-	@GetMapping("/index")
-	public String index() {
-		return "index";
-	}
+    @Autowired
+    private TeamValidator teamValidator;
 
-	@GetMapping("/team/{id}")
-	public String getTeam(@PathVariable("id") Long id, Model model) {
-		model.addAttribute("team", this.teamRepository.findById(id).get());
-		return "team";
-	}
-	
-	@GetMapping("/team")
-	public String showTeams(Model model) {
-		model.addAttribute("teams", this.teamRepository.findAll());
-		return "teams";
-	}
+    @GetMapping("/index")
+    public String index() {
+        return "index";
+    }
 
-	@PostMapping("/team")
-	public String newTeam(@Valid @ModelAttribute("team") Team team, BindingResult bindingResult, Model model) {
+    @GetMapping("/team/{id}")
+    public String getTeam(@PathVariable("id") Long id, Model model) {
+        Team team = this.teamRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid team Id:" + id));
+        model.addAttribute("team", team);
+        return "team";
+    }
 
-	    this.teamValidator.validate(team, bindingResult);
-	    if (!bindingResult.hasErrors()) {
-	        this.teamRepository.save(team);
-	        model.addAttribute("team", team);
-	        return "team.html";
-	    } else {
-	        return "admin/formNewTeam";
-	    }
-	}
-	@GetMapping("/admin/formNewTeam")
-	public String formNewTeam(Model model) {
-	    model.addAttribute("team", new Team());
-	    return "admin/formNewTeam";
-	}
+    @GetMapping("/team")
+    public String showTeams(Model model) {
+        model.addAttribute("teams", this.teamRepository.findAll());
+        return "teams";
+    }
 
-	@GetMapping("/formSearchTeam")
-	public String formSearchTeams(Model model) {
-	    model.addAttribute("teamSearch", new Team()); 
-	    return "formSearchTeam";  
-	}
+    @PostMapping("/team")
+    public String newTeam(@Valid @ModelAttribute("team") Team team, BindingResult bindingResult, Model model) {
+        // Valida il team
+        this.teamValidator.validate(team, bindingResult);
+        
+        // Se ci sono errori, mostra nuovamente il form con i messaggi di errore
+        if (bindingResult.hasErrors()) {
+            return "admin/formNewTeam";  // Nome del template per il form di creazione del team
+        }
+        
+        // Se non ci sono errori, salva il team e reindirizza alla pagina di dettaglio
+        this.teamRepository.save(team);
+        return "redirect:/team/" + team.getId();  // Reindirizza alla pagina di dettaglio del team
+    }
 
-	@PostMapping("/formSearchTeam")
-	public String searchTeams(Model model, @RequestParam("year") int year) {
-	    model.addAttribute("teams", this.teamRepository.findByYear(year));
-	    return "foundTeam";
-	}
 
-    // Metodo per visualizzare il form di modifica per una squadra esistente
+    @GetMapping("/admin/formNewTeam")
+    public String formNewTeam(Model model) {
+        model.addAttribute("team", new Team());
+        return "admin/formNewTeam";
+    }
+
+    @GetMapping("/formSearchTeam")
+    public String formSearchTeams(Model model) {
+        model.addAttribute("teamSearch", new Team());
+        return "formSearchTeam";
+    }
+
+    @PostMapping("/formSearchTeam")
+    public String searchTeams(Model model, @RequestParam("year") int year) {
+        model.addAttribute("teams", this.teamRepository.findByYear(year));
+        return "foundTeam";
+    }
+
+    @GetMapping("/admin/selectTeamToEdit")
+    public String selectTeamToEdit(Model model) {
+        model.addAttribute("teams", this.teamRepository.findAll());
+        return "admin/selectTeamToEdit";
+    }
+
     @GetMapping("/admin/formEditTeam/{id}")
     public String formEditTeam(@PathVariable("id") Long id, Model model) {
         Team team = this.teamRepository.findById(id).orElse(null);
-        
-        if (team == null) {
-            return "redirect:/error"; // Reindirizza a una pagina di errore se il team non esiste
+        if (team != null) {
+            model.addAttribute("team", team);
+            return "admin/formEditTeam";
+        } else {
+            return "redirect:/error";
         }
-
-        model.addAttribute("team", team);
-        return "admin/formEditTeam"; // Mostra il form di modifica dei dettagli della squadra
     }
 
-    // Metodo per aggiornare una squadra esistente
     @PostMapping("/admin/formEditTeam/{id}")
     public String updateTeam(@PathVariable("id") Long id, @Valid @ModelAttribute("team") Team team, BindingResult bindingResult, Model model) {
-        // Validiamo i dati della squadra
         this.teamValidator.validate(team, bindingResult);
         if (!bindingResult.hasErrors()) {
-            // Recuperiamo la squadra esistente dal database
             Team existingTeam = this.teamRepository.findById(id).orElse(null);
-            if (existingTeam == null) {
-                return "redirect:/error"; // Se la squadra non esiste, reindirizza a una pagina di errore
+            if (existingTeam != null) {
+                existingTeam.setName(team.getName());
+                existingTeam.setYear(team.getYear());
+                existingTeam.setAddress(team.getAddress());
+
+                this.teamRepository.save(existingTeam);
+
+                model.addAttribute("team", existingTeam);
+
+                return "redirect:/team/" + id;
+            } else {
+                return "redirect:/error";
             }
-
-            // Aggiorniamo solo i campi della squadra, senza modificare il presidente
-            existingTeam.setName(team.getName());
-            existingTeam.setYear(team.getYear());
-            existingTeam.setAddress(team.getAddress());
-            
-            // Salviamo le modifiche
-            this.teamRepository.save(existingTeam);
-
-            // Aggiungiamo la squadra aggiornata al modello
-            model.addAttribute("team", existingTeam);
-
-            // Redirigiamo alla pagina della squadra
-            return "redirect:/team/" + id;
         } else {
-            // In caso di errori di validazione, torniamo al form di modifica con gli errori
             model.addAttribute("team", team);
             return "admin/formEditTeam";
         }
     }
-
-    }
-
+}

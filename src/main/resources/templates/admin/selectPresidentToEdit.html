@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seleziona Presidente da Modificare</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+<body>
+    <header>
+        <div th:if="${userDetails}">
+            <span th:text="${userDetails.username}"></span>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
+
+    <h1>Seleziona un Presidente da Modificare</h1>
+
+    <!-- Elenco dei presidenti -->
+    <ul>
+        <li th:each="president : ${presidents}">
+            <span th:text="${president.name} + ' ' + ${president.surname}"></span>
+            <!-- Link per la modifica -->
+            <a th:href="@{/admin/formEditPresident/{id}(id=${president.id})}">Modifica</a>
+        </li>
+    </ul>
+
+    <div>
+        <a href="/admin/indexAdmin">Torna alla home amministratore</a>
+    </div>
+</body>
+</html>

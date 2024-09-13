@@ -1,44 +1,46 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-	<title>
-		SiwSport - Homepage
-	</title>
-	<link rel="stylesheet" href="/css/stile.css" />
+    <title>SiwSport - Homepage Admin</title>
+    <link rel="stylesheet" href="/css/stile.css" />
 </head>
-
 <body>
-	<header>
-		<div th:if="${userDetails}">
-			<span th:text="${userDetails.username}"></span>
-			<a href="/logout">Logout</a>
-		</div>
-	</header>
+    <header>
+        <div th:if="${userDetails}">
+            <span th:text="${userDetails.username}"></span>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
 
-	<h1>Operazioni per amministratore</h1>
+    <h1>Operazioni per Amministratore</h1>
 
-	<!-- Modifica e gestione squadre -->
-	<h2>Gestione Squadre</h2>
-	<div>
-		<a href="/admin/formNewTeam">Aggiungi una nuova squadra</a>
-	</div>
-	<div>
-		<a href="/admin/formEditTeam">Modifica squadre esistenti</a>
-	</div>
+    <!-- Gestione Squadre -->
+    <h2>Gestione Squadre</h2>
+    <div>
+        <a href="/admin/formNewTeam">Aggiungi una nuova squadra</a>
+    </div>
+    <div>
+        <a href="/admin/selectTeamToEdit">Modifica una squadra esistente</a>
+    </div>
+    <div>
+        <a href="/team">Visualizza tutte le squadre</a> <!-- Link per visualizzare tutte le squadre -->
+    </div>
 
-	<!-- Gestione Presidenti -->
-	<h2>Gestione Presidenti</h2>
-	<div>
-		<a href="/admin/formNewPresident">Inserisci un presidente</a>
-	</div>
-	<div>
-		<a href="/admin/formEditPresident">Modifica presidente</a>
-	</div>
-	<div>
-		<a href="/admin/formDeletePresident">Elimina presidente</a>
-	</div>
+    <!-- Gestione Presidenti -->
+    <h2>Gestione Presidenti</h2>
+    <div>
+        <a href="/admin/formNewPresident">Inserisci un nuovo presidente</a>
+    </div>
+    <div>
+        <a href="/admin/selectPresidentToEdit">Modifica un presidente esistente</a>
+    </div>
+    <div>
+        <a href="/presidents">Visualizza tutti i presidenti</a> <!-- Link per visualizzare tutti i presidenti -->
+    </div>
+
+    <div>
+        <a href="/logout">Logout</a>
+    </div>
 
 </body>
-
 </html>
