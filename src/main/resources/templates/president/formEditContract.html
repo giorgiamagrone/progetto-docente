@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Modifica Contratto</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <h1>Modifica Contratto per il giocatore: <span th:text="${contract.player.name}"></span> <span th:text="${contract.player.surname}"></span></h1>
+
+    <form th:action="@{/president/updateContract/{contractId}(contractId=${contract.id})}" method="POST" th:object="${contract}">
+        <div>
+            <label>Data Inizio Carriera:</label>
+            <span><input type="datetime-local" th:field="${contract.startCareer}" required /></span>
+        </div>
+
+        <div>
+            <label>Data Fine Carriera:</label>
+            <span><input type="datetime-local" th:field="${contract.stopCareer}" required /></span>
+        </div>
+
+        <div>
+            <span><button type="submit">Salva Modifiche</button></span>
+        </div>
+    </form>
+
+    <div>
+        <a th:href="@{/president/indexPlayer/{playerId}(playerId=${contract.player.id})}">Torna al giocatore</a>
+    </div>
+</body>
+
+</html>

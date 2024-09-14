@@ -4,12 +4,17 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
@@ -29,12 +34,30 @@ public class Player {
 	private LocalDate dateOfBirth;
 
 	private String role;
-	//private LocalDateTime startCarreer;
-	//private LocalDateTime stopCarreer;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "team_id")
 	private Team team;
+	@OneToOne(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Contract contract;
+	@Column(name = "start_carreer")  // Correct column name mapping
+    private LocalDateTime startCareer;
+
+    @Column(name = "stop_carreer")  // Correct column name mapping
+    private LocalDateTime stopCareer;
+
+
+	
+	public Contract getContract() {
+		return contract;
+	}
+
+	public void setContract(Contract contract) {
+        this.contract = contract;
+        if (contract != null) {
+            contract.setPlayer(this);
+        }
+    }
 
 	public Long getId() {
 		return id;
@@ -84,22 +107,6 @@ public class Player {
 		this.role = role;
 	}
 
-	//public LocalDateTime getStartCarreer() {
-	//	return startCarreer;
-	//}
-
-	//public void setStartCarreer(LocalDateTime startCarreer) {
-	//	this.startCarreer = startCarreer;
-	//}
-
-	//public LocalDateTime getStopCarreer() {
-	///	return stopCarreer;
-	//}
-//
-	//public void setStopCarreer(LocalDateTime stopCarreer) {
-	//	this.stopCarreer = stopCarreer;
-	//}
-
 	public Team getTeam() {
 		return team;
 	}
@@ -126,7 +133,5 @@ public class Player {
 				&& Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(role, other.role)
 				&& Objects.equals(surname, other.surname) && Objects.equals(team, other.team);
 	}
-
-	
 
 }

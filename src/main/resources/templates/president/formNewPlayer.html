@@ -2,49 +2,74 @@
 <html>
 
 <head>
-	<title>
-		Nuovo Giocatore
-	</title>
-	<link rel="stylesheet" href="/css/stile.css" />
+    <title>
+        Nuovo Giocatore
+    </title>
+    <link rel="stylesheet" href="/css/stile.css" />
 </head>
 
 <body>
-	<header>
-		<div th:if="${userDetails}">
-			<span th:text="${userDetails.username}"></span>
-			<a href="/logout">Logout</a>
-		</div>
-	</header>
+    <header>
+        <div th:if="${userDetails}">
+            <span th:text="${userDetails.username}"></span>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
 
-	<h1>Aggiungi un giocatore</h1>
+    <h1>Aggiungi un giocatore e il suo contratto</h1>
+
 	<form th:action="@{/president/indexPlayer}" method="POST" th:object="${player}">
-		<div>
-			<span th:text="${messaggioErrore}">Errore</span>
-		</div>
+	    <div>
+	        <span th:if="${messaggioErrore != null}" th:text="${messaggioErrore}">Errore</span>
+	    </div>
 
-		<div>
-			<label>Nome:</label> <span><input required type="text" th:field="${player.name}" /></span>
-		</div>
+	    <!-- Dati del giocatore -->
+	    <div>
+	        <label>Nome:</label> 
+	        <span><input required type="text" th:field="*{name}" /></span>
+	    </div>
 
-		<div>
-			<label>Cognome:</label> <span><input required type="text" th:field="${player.surname}" /></span>
-		</div>
+	    <div>
+	        <label>Cognome:</label> 
+	        <span><input required type="text" th:field="*{surname}" /></span>
+	    </div>
 
-		<div>
-			<label>Data di nascita:</label> <span><input type="date" th:field="${player.dateOfBirth}" /></span>
-		</div>
+	    <div>
+	        <label>Data di nascita:</label> 
+	        <span><input type="date" th:field="*{dateOfBirth}" /></span>
+	    </div>
 
-		<div>
-			<label>Ruolo:</label> <span><input type="text" th:field="${player.role}" /></span> <!-- Nuovo campo ruolo -->
-		</div>
+	    <div>
+	        <label>Città:</label> 
+	        <span><input required type="text" th:field="*{city}" /></span>
+	    </div>
 
-		<div>
-			<span><button type="submit">Conferma</button></span>
-		</div>
+	    <div>
+	        <label>Ruolo:</label> 
+	        <span><input type="text" th:field="*{role}" /></span>
+	    </div>
+
+	    <!-- Dati del contratto -->
+	    <h2>Dati del Contratto</h2>
+	    
+	    <div>
+	        <label>Data Inizio Carriera:</label> 
+	        <span><input type="datetime-local" th:field="*{contract.startCareer}" required /></span>
+	    </div>
+
+	    <div>
+	        <label>Data Fine Carriera:</label> 
+	        <span><input type="datetime-local" th:field="*{contract.stopCareer}" required /></span>
+	    </div>
+
+	    <!-- Pulsante di conferma -->
+	    <div>
+	        <span><button type="submit">Conferma</button></span>
+	    </div>
 	</form>
 
 	<div>
-		<a th:href="@{/president/indexPresident}">Torna alla Home</a>
+	    <a th:href="@{/president/indexPresident}">Torna alla Home</a>
 	</div>
 </body>
 

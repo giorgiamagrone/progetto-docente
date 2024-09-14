@@ -30,6 +30,12 @@
         <button type="submit">Salva Modifiche</button>
     </form>
 
+    <!-- Se il giocatore ha già un contratto -->
+    <div th:if="${player.contract != null}">
+        <h2>Modifica Contratto</h2>
+        <a th:href="@{/president/formEditContract/{contractId}(contractId=${player.contract.id})}">Modifica Contratto</a>
+    </div>
+
     <div>
         <a th:href="@{/president/selectPlayerToEdit}">Torna indietro</a>
     </div>

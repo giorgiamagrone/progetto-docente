@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SiwSport - Gestione Presidenti</title>
+    <title>SiwSport - Gestione Giocatori</title>
     <link rel="stylesheet" href="/css/stile.css" />
 </head>
 <body>
@@ -11,32 +11,22 @@
             <a href="/logout">Logout</a>
         </div>
     </header>
+
+    <h1>Operazioni per il Presidente</h1>
+
+    <!-- Gestione Giocatori -->
     <h2>Gestione Giocatori</h2>
-    <div th:if="${players != null}">
-        <table>
-            <thead>
-                <tr>
-                    <th>Nome</th>
-                    <th>Cognome</th>
-                    <th>Ruolo</th>
-                    <th>Azioni</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="player : ${players}">
-                    <td th:text="${player.name}"></td>
-                    <td th:text="${player.surname}"></td>
-                    <td th:text="${player.role}"></td>
-                    <td>
-                        <a th:href="@{/president/editPlayer/{id}(id=${player.id})}">Modifica</a> | 
-                        <a th:href="@{/president/deletePlayer/{id}(id=${player.id})}" onclick="return confirm('Sei sicuro di voler eliminare questo giocatore?');">Elimina</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div>
+        <a href="/president/formNewPlayer">Aggiungi un nuovo giocatore</a> <!-- Link per il form di aggiunta di un nuovo giocatore -->
     </div>
-    <div th:unless="${players}">
-        <p>Nessun giocatore disponibile.</p>
+    <div>
+        <a href="/president/selectPlayerToEdit">Modifica un giocatore esistente</a> <!-- Link per selezionare un giocatore da modificare -->
+    </div>
+    <div>
+        <a href="/president/selectPlayerToDelete">Elimina un giocatore esistente</a> <!-- Link per selezionare un giocatore da eliminare -->
+    </div>
+    <div>
+        <a href="/president/indexPlayers">Visualizza tutti i giocatori</a> <!-- Link per visualizzare la lista completa dei giocatori -->
     </div>
 
 </body>

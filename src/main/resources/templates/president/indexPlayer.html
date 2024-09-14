@@ -15,7 +15,7 @@
     </header>
 
     <h1>Dettagli Giocatore</h1>
-    
+
     <div th:if="${player}">
         <p>
             <strong>Nome:</strong> <span th:text="${player.name}"></span>
@@ -27,11 +27,26 @@
             <strong>Data di nascita:</strong> <span th:text="${player.dateOfBirth}"></span>
         </p>
         <p>
-            <strong>Ruolo:</strong> <span th:text="${player.role}"></span> <!-- Aggiunto per visualizzare il ruolo -->
+            <strong>Ruolo:</strong> <span th:text="${player.role}"></span>
         </p>
         <p>
             <strong>Squadra:</strong> <span th:text="${player.team != null ? player.team.name : 'Nessuna squadra'}"></span>
         </p>
+
+        <!-- Dettagli del contratto se esiste -->
+        <div th:if="${player.contract}">
+            <h2>Dettagli del Contratto</h2>
+            <p>
+                <strong>Data inizio carriera:</strong> <span th:text="${player.contract.startCareer}"></span>
+            </p>
+            <p>
+                <strong>Data fine carriera:</strong> <span th:text="${player.contract.stopCareer} != null ? ${player.contract.stopCareer} : 'Nessuna data di fine carriera'"></span>
+            </p>
+        </div>
+
+        <div th:unless="${player.contract}">
+            <p>Il giocatore non ha un contratto attivo.</p>
+        </div>
     </div>
 
     <div th:unless="${player}">
