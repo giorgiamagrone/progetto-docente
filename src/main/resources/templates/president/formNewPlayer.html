@@ -14,17 +14,14 @@
 			<span th:text="${userDetails.username}"></span>
 			<a href="/logout">Logout</a>
 		</div>
-		<div th:unless="${user}">
-			<a href="/login">Login</a>
-		</div>
 	</header>
 
 	<h1>Aggiungi un giocatore</h1>
-	<form th:action="@{/admin/player}" method="POST" th:object="${player}">
+	<form th:action="@{/president/indexPlayer}" method="POST" th:object="${player}">
 		<div>
 			<span th:text="${messaggioErrore}">Errore</span>
 		</div>
-		
+
 		<div>
 			<label>Nome:</label> <span><input required type="text" th:field="${player.name}" /></span>
 		</div>
@@ -36,12 +33,19 @@
 		<div>
 			<label>Data di nascita:</label> <span><input type="date" th:field="${player.dateOfBirth}" /></span>
 		</div>
-		
+
+		<div>
+			<label>Ruolo:</label> <span><input type="text" th:field="${player.role}" /></span> <!-- Nuovo campo ruolo -->
+		</div>
+
 		<div>
 			<span><button type="submit">Conferma</button></span>
 		</div>
 	</form>
-	
+
+	<div>
+		<a th:href="@{/president/indexPresident}">Torna alla Home</a>
+	</div>
 </body>
 
 </html>

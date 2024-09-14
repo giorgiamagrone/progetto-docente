@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seleziona Giocatore da Modificare</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+<body>
+    <h1>Seleziona Giocatore da Modificare</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Ruolo</th>
+                <th>Modifica</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="player : ${players}">
+                <td th:text="${player.name}"></td>
+                <td th:text="${player.surname}"></td>
+                <td th:text="${player.role}"></td>
+                <td>
+                    <a th:href="@{/president/formEditPlayer/{id}(id=${player.id})}">Modifica</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+	<div>
+		   <a th:href="@{/president/indexPresident}">Torna alla Home</a>
+		</div>
+</body>
+</html>
