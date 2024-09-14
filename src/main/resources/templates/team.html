@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>Dettagli Squadra</title>
@@ -14,19 +14,24 @@
         <span th:text="'(' + ${team.year} + ')'"></span>
         <span th:text="${team.address}"></span>
 
-        <!-- Aggiungi un link per visualizzare i dettagli del presidente -->
-		<h2>Dettagli Presidente</h2>
-		<div th:if="${team.president}">
-		    <a th:href="@{/president/{id}(id=${team.president.id})}">Visualizza Presidente</a>
-		</div>
-		<div th:unless="${team.president}">
-		    <p>Nessun presidente associato.</p>
-		</div>
+        <!-- Mostra solo il nome del presidente -->
+        <h2>Dettagli Presidente</h2>
+        <div th:if="${team.president}">
+            <p>Presidente: <span th:text="${team.president.name} + ' ' + ${team.president.surname}"></span></p>
+        </div>
+        <div th:unless="${team.president}">
+            <p>Nessun presidente associato.</p>
+        </div>
+    </div>
 
-    <div th:unless="${team}">Non esiste</div>
+    <div th:unless="${team}">
+        <p>Non esiste.</p>
+    </div>
+
     <div>
         <a th:href="@{/}">Torna alla Home</a>
     </div>
+
 </body>
 
 </html>

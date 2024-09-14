@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
 	<title>Giocatori</title>
@@ -12,22 +12,29 @@
 			<span th:text="${userDetails.username}"></span>
 			<a href="/logout">Logout</a>
 		</div>
-		<div th:unless="${user}">
+		<div th:if="${userDetails == null}">
 			<a href="/login">Login</a>
 		</div>
 	</header>
 
 	<h1>Giocatori</h1>
-	<div th:if="${players==null || players.isEmpty()}">Non ci sono giocatori nel sistema</div>
-	<ul>
-		<li th:each="player : ${players}">
-			<a th:href="@{'/player' + '/' + ${player.id}}"
-				th:text="${player.name} + ' ' + ${player.surname}"></a>
-		</li>
-	</ul>
+
+	<div th:if="${players == null || players.isEmpty()}">
+		<p>Non ci sono giocatori nel sistema.</p>
+	</div>
+
+	<div th:if="${players != null && !players.isEmpty()}">
+		<ul>
+			<li th:each="player : ${players}">
+				<a th:href="@{/player/{id}(id=${player.id})}"
+					th:text="${player.name} + ' ' + ${player.surname}"></a>
+			</li>
+		</ul>
+	</div>
+
 	<div>
-    <a th:href="@{/}">Torna alla Home</a>
-  </div>
+		<a th:href="@{/}">Torna alla Home</a>
+	</div>
 </body>
 
 </html>

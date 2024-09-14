@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seleziona Presidente da Eliminare</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+<body>
+    <h1>Seleziona Presidente da Eliminare</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Nome Presidente</th>
+                <th>Cognome Presidente</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="president : ${presidents}">
+                <td th:text="${president.name}">Nome Presidente</td>
+                <td th:text="${president.surname}">Cognome Presidente</td>
+                <td>
+                    <a th:href="@{/admin/selectPresidentToDelete/{id}(id=${president.id})}">Elimina</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+	<div>
+		   <a th:href="@{/admin/indexAdmin}">Torna alla Home</a>
+		 </div>
+</body>
+</html>

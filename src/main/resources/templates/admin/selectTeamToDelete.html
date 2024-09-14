@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seleziona Squadra da Eliminare</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+<body>
+    <h1>Seleziona Squadra da Eliminare</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Nome Squadra</th>
+                <th>Anno di Fondazione</th>
+                <th>Azioni</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="team : ${teams}">
+                <td th:text="${team.name}">Nome Squadra</td>
+                <td th:text="${team.year}">Anno di Fondazione</td>
+                <td>
+                    <a th:href="@{/admin/selectTeamToDelete/{id}(id=${team.id})}">Elimina</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+	<div>
+	   <a th:href="@{/admin/indexAdmin}">Torna alla Home</a>
+	 </div>
+</body>
+</html>

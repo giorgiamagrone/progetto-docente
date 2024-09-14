@@ -1,31 +1,53 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>
-			SiwSport - Gestione Giocatori
-		</title>
-		<link rel="stylesheet" href="/css/stile.css" />
-	</head>
-<body>
-	<header>
-		<div th:if="${userDetails}">
-			<span th:text="${userDetails.username}"></span>
-			<a href="/logout">Logout</a>
-		</div>
-		<div th:unless="${user}">
-			<a href="/login">Login</a>
-		</div>
-	</header>
+<html xmlns:th="http://www.thymeleaf.org">
 
-		<h1>Gestione Giocatori</h1>
-		<div>
-			<a href="/admin/formNewPlayer">Inserisci i dati di un giocatore</a>
-		</div>
-		<div>
-			<a href="/player">Giocatori</a>
-		</div>
-		<div>
-    <a th:href="@{/}">Torna alla Home</a>
-  </div>
-	</body>
+<head>
+    <title>Dettagli Giocatore</title>
+    <link rel="stylesheet" href="/css/stile.css" />
+</head>
+
+<body>
+    <header>
+        <div th:if="${userDetails}">
+            <span th:text="${userDetails.username}"></span>
+            <a href="/logout">Logout</a>
+        </div>
+    </header>
+
+    <h1>Dettagli Giocatore</h1>
+
+    <div th:if="${player}">
+        <table>
+            <tr>
+                <th>Nome</th>
+                <td th:text="${player.name}"></td>
+            </tr>
+            <tr>
+                <th>Cognome</th>
+                <td th:text="${player.surname}"></td>
+            </tr>
+            <tr>
+                <th>Città</th>
+                <td th:text="${player.city}"></td>
+            </tr>
+            <tr>
+                <th>Data di Nascita</th>
+                <td th:text="${#dates.format(player.dateOfBirth, 'dd/MM/yyyy')}"></td>
+            </tr>
+            <tr>
+                <th>Ruolo</th>
+                <td th:text="${player.role}"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div th:if="${player == null}">
+        <p>Giocatore non trovato.</p>
+    </div>
+
+    <div>
+        <a th:href="@{/president/indexPresident}">Torna alla home</a>
+    </div>
+</body>
+
 </html>

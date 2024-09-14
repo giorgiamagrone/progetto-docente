@@ -32,7 +32,7 @@ public class President {
 	
 	private String username;
 	 @OneToOne
-	    @JoinColumn(name = "team_id")
+	  @JoinColumn(name = "team_id")
 	    private Team team;
 	 
 	// Relazione uno-a-uno con Credentials
@@ -43,8 +43,15 @@ public class President {
 		return team;
 	}
 	public void setTeam(Team team) {
-		this.team = team;
+	    if (!Objects.equals(this.team, team)) {
+	        this.team = team;
+	        if (team != null && !Objects.equals(team.getPresident(), this)) {
+	            team.setPresident(this);
+	        }
+	    }
 	}
+
+
 	public String getName() {
 		return name;
 	}

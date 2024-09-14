@@ -29,19 +29,33 @@ public class TeamController {
         return "index";
     }
 
+    // Visualizza i dettagli di una squadra con i giocatori associati
     @GetMapping("/team/{id}")
     public String getTeam(@PathVariable("id") Long id, Model model) {
         Team team = this.teamRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid team Id:" + id));
         model.addAttribute("team", team);
-        return "team";
+        model.addAttribute("players", team.getPlayers()); // Passa la lista dei giocatori al modello
+        return "team";  // La vista per visualizzare i dettagli della squadra e i giocatori
     }
-
+ // Visualizza tutte le squadre per admin
+    @GetMapping("/admin/indexTeams")
+    public String showTeamsForAdmin(Model model) {
+        model.addAttribute("teams", this.teamRepository.findAll());
+        return "admin/indexTeams";  // Visualizzazione per l'admin
+    }
     @GetMapping("/team")
     public String showTeams(Model model) {
         model.addAttribute("teams", this.teamRepository.findAll());
         return "teams";
     }
-
+ // Mappatura per la pagina riservata agli admin per visualizzare i dettagli di una squadra
+    @GetMapping("/admin/indexTeam/{id}")
+    public String getIndexTeam(@PathVariable("id") Long id, Model model) {
+        Team team = this.teamRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid team Id:" + id));
+        model.addAttribute("team", team);
+        return "admin/indexTeam";  // Vista per admin
+    }
     @PostMapping("/team")
     public String newTeam(@Valid @ModelAttribute("team") Team team, BindingResult bindingResult, Model model) {
         // Valida il team
@@ -115,5 +129,18 @@ public class TeamController {
             model.addAttribute("team", team);
             return "admin/formEditTeam";
         }
+    }
+    @GetMapping("/admin/selectTeamToDelete")
+    public String selectTeamToDelete(Model model) {
+        model.addAttribute("teams", this.teamRepository.findAll());
+        return "admin/selectTeamToDelete";
+    }
+
+
+    // POST Mapping per eliminare una squadra
+    @GetMapping("/admin/selectTeamToDelete/{id}")
+    public String deleteTeam(@PathVariable("id") Long id) {
+        teamRepository.deleteById(id);
+        return "redirect:/admin/selectTeamToDelete";
     }
 }

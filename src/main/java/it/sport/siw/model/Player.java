@@ -29,8 +29,8 @@ public class Player {
 	private LocalDate dateOfBirth;
 
 	private String role;
-	private LocalDateTime startCarreer;
-	private LocalDateTime stopCarreer;
+	//private LocalDateTime startCarreer;
+	//private LocalDateTime stopCarreer;
 	
 	@ManyToOne
 	@JoinColumn(name = "team_id")
@@ -84,21 +84,21 @@ public class Player {
 		this.role = role;
 	}
 
-	public LocalDateTime getStartCarreer() {
-		return startCarreer;
-	}
+	//public LocalDateTime getStartCarreer() {
+	//	return startCarreer;
+	//}
 
-	public void setStartCarreer(LocalDateTime startCarreer) {
-		this.startCarreer = startCarreer;
-	}
+	//public void setStartCarreer(LocalDateTime startCarreer) {
+	//	this.startCarreer = startCarreer;
+	//}
 
-	public LocalDateTime getStopCarreer() {
-		return stopCarreer;
-	}
-
-	public void setStopCarreer(LocalDateTime stopCarreer) {
-		this.stopCarreer = stopCarreer;
-	}
+	//public LocalDateTime getStopCarreer() {
+	///	return stopCarreer;
+	//}
+//
+	//public void setStopCarreer(LocalDateTime stopCarreer) {
+	//	this.stopCarreer = stopCarreer;
+	//}
 
 	public Team getTeam() {
 		return team;
@@ -110,7 +110,7 @@ public class Player {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(city, dateOfBirth, id, name, role, startCarreer, stopCarreer, surname);
+		return Objects.hash(city, dateOfBirth, id, name, role, surname, team);
 	}
 
 	@Override
@@ -124,8 +124,9 @@ public class Player {
 		Player other = (Player) obj;
 		return Objects.equals(city, other.city) && Objects.equals(dateOfBirth, other.dateOfBirth)
 				&& Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(role, other.role)
-				&& Objects.equals(startCarreer, other.startCarreer) && Objects.equals(stopCarreer, other.stopCarreer)
-				&& Objects.equals(surname, other.surname);
+				&& Objects.equals(surname, other.surname) && Objects.equals(team, other.team);
 	}
+
+	
 
 }

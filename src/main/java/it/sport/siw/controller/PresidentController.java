@@ -51,6 +51,14 @@ public class PresidentController {
         // Controlla se il presidente esiste già
         if (!presidentRepository.existsByNameAndSurname(president.getName(), president.getSurname())) {
             try {
+            	if (president.getTeam() != null && teamRepository.existsById(president.getTeam().getId())) {
+                    // Assegna il team al presidente, se esiste
+                    Team team = teamRepository.findById(president.getTeam().getId()).get();
+                    president.setTeam(team);
+                } else {
+                    model.addAttribute("messaggioErrore", "Il team selezionato non esiste");
+                    return "admin/formNewPresident";  // Ritorna alla form se c'è un errore
+                }
                 // Salva il presidente nel database
                 presidentRepository.save(president);
 
@@ -67,7 +75,7 @@ public class PresidentController {
                 model.addAttribute("successMessage", "Presidente aggiunto con successo!");
 
                 // Reindirizza alla lista dei presidenti
-                return "redirect:/presidents";
+                return "redirect:/admin/presidents";
 
             } catch (Exception e) {
                 // Aggiungi un messaggio di errore al modello se qualcosa va storto
@@ -81,10 +89,10 @@ public class PresidentController {
         }
     }
 
-    @GetMapping("/presidents")
+    @GetMapping("/admin/presidents")
     public String showPresidents(Model model) {
         model.addAttribute("presidents", presidentRepository.findAll());
-        return "presidents"; 
+        return "/admin/presidents"; 
     }
 
     @GetMapping("/admin/president/{id}")
@@ -92,7 +100,7 @@ public class PresidentController {
     	  Optional<President> optionalPresident = this.presidentRepository.findById(id);
     	    if (optionalPresident.isPresent()) {
     	        model.addAttribute("president", optionalPresident.get());
-    	        return "president";  // Si riferisce alla tua pagina HTML 'president.html'
+    	        return "/admin/president";  // Si riferisce alla tua pagina HTML 'president.html'
     	    } else {
     	        model.addAttribute("messaggioErrore", "Presidente non trovato");
     	        return "error";  // Pagina di errore se il presidente non è trovato
@@ -146,5 +154,36 @@ public class PresidentController {
             return "admin/formEditPresident";
         }
     }
+    // Form per scegliere il presidente da modificare
+    @GetMapping("/admin/selectPresidentToDelete")
+    public String selectPresidentToDelete(Model model) {
+        model.addAttribute("presidents", this.presidentRepository.findAll());
+        return "admin/selectPresidentToDelete";  // Pagina per la selezione del presidente da modificare
+    }
+    @GetMapping("/admin/selectPresidentToDelete/{id}")
+    public String deletePresident(@PathVariable("id") Long id, Model model) {
+        Optional<President> optionalPresident = presidentRepository.findById(id);
+        
+        if (optionalPresident.isPresent()) {
+            President president = optionalPresident.get();
+            
+            // Dissocia il presidente dal team, se ne ha uno associato
+            if (president.getTeam() != null) {
+                Team team = president.getTeam();
+                team.setPresident(null);  // Rimuovi la relazione del presidente dal team
+                teamRepository.save(team);  // Salva le modifiche al team
+                president.setTeam(null);  // Rimuovi la relazione team dal presidente
+            }
+            
+            // Elimina il presidente dal repository
+            presidentRepository.delete(president);
+            model.addAttribute("successMessage", "Presidente eliminato con successo");
+        } else {
+            model.addAttribute("errorMessage", "Presidente non trovato");
+        }
+
+        return "redirect:/admin/selectPresidentToDelete";
+    }
+
 
 }
