@@ -1,5 +1,7 @@
 package it.sport.siw.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -15,5 +17,6 @@ public interface PresidentRepository extends CrudRepository<President, Long>{
 	@Query(value = "SELECT name FROM President WHERE id NOT IN " +
 	        "(SELECT id FROM Team WHERE id = :teamId)",  nativeQuery=true)
 	Iterable<President> findPresidentsNotInTeam(@Param("teamId") Long teamId);
+	Optional<President> findByUsername(String username);
 }
 

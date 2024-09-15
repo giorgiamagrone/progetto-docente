@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,6 +21,7 @@ import it.sport.siw.model.President;
 import it.sport.siw.model.Team;
 import it.sport.siw.repository.ContractRepository;
 import it.sport.siw.repository.PlayerRepository;
+import it.sport.siw.repository.PresidentRepository;
 import it.sport.siw.service.CredentialsService;
 import jakarta.transaction.Transactional;
 
@@ -27,7 +30,8 @@ public class PlayerController {
 
     @Autowired
     private PlayerRepository playerRepository;
-
+    @Autowired
+    private PresidentRepository presidentRepository;
     @Autowired
     private CredentialsService credentialsService;
 
@@ -62,48 +66,44 @@ public class PlayerController {
         model.addAttribute("player", player);
         return "president/formNewPlayer";
     }
-    @Transactional
+    
     @PostMapping("/president/indexPlayer")
-    public String newPlayer(@ModelAttribute("player") Player player, Principal principal, Model model) {
-        // Check if contract is null or has null fields
-        if (player.getContract() == null) {
-            System.out.println("Contract is null");
-        } else {
-            System.out.println("Start Career: " + player.getContract().getStartCareer());
-            System.out.println("Stop Career: " + player.getContract().getStopCareer());
+    public String newPlayer(@ModelAttribute Player player, Model model) {
+        // Recupera l'utente autenticato
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+
+        // Cerca il presidente loggato tramite username
+        President president = presidentRepository.findByUsername(currentUsername)
+                .orElseThrow(() -> new IllegalArgumentException("Presidente non trovato"));
+
+        // Recupera la squadra associata al presidente loggato
+        Team team = president.getTeam();
+        if (team == null) {
+            model.addAttribute("errorMessage", "Non hai una squadra associata.");
+            return "/president/errorPage";  // Mostra un errore se il presidente non ha una squadra
         }
 
-        String errorMessage = validatePlayer(player);
-        if (errorMessage != null) {
-            model.addAttribute("messaggioErrore", errorMessage);
-            return "president/formNewPlayer";
+        // Cerca se esiste già un giocatore con lo stesso nome, cognome e data di nascita
+        Optional<Player> existingPlayer = playerRepository.findPlayerByDetails(player.getName(), player.getSurname(), player.getDateOfBirth());
+        
+        if (existingPlayer.isPresent()) {
+            // Verifica se il giocatore esistente ha un contratto attivo
+            Player existing = existingPlayer.get();
+            if (existing.getContract() != null && LocalDateTime.now().isBefore(existing.getContract().getStopCareer())) {
+                model.addAttribute("errorMessage", "Questo giocatore è già tesserato in un'altra squadra.");
+                return "/president/errorPage"; // Mostra la pagina di errore
+            }
         }
 
-        Credentials credentials = credentialsService.getCredentials(principal.getName());
-        Team presidentTeam = credentials.getPresident().getTeam();
-        player.setTeam(presidentTeam);
+        // Imposta la squadra del giocatore con la squadra del presidente loggato
+        player.setTeam(team);
 
+        // Salva il giocatore con la squadra assegnata
         playerRepository.save(player);
-
-        Contract contract = player.getContract();
-        contract.setPlayer(player);
-        contractRepository.save(contract);
-
-        return "redirect:/president/indexPlayer/" + player.getId();
-    }
-
-    private String validatePlayer(Player player) {
-        if (player.getName() == null || player.getName().isEmpty()) {
-            return "Il nome del giocatore è obbligatorio.";
-        }
-        if (player.getSurname() == null || player.getSurname().isEmpty()) {
-            return "Il cognome del giocatore è obbligatorio.";
-        }
-        Contract contract = player.getContract();
-        if (contract == null || contract.getStartCareer() == null || contract.getStopCareer() == null) {
-            return "Le date di inizio e fine carriera sono obbligatorie.";
-        }
-        return null;
+        
+        model.addAttribute("successMessage", "Giocatore aggiunto con successo alla squadra " + team.getName() + ".");
+        return "redirect:/president/indexPlayer/" + player.getId(); // Redirect alla pagina di successo o al dettaglio del giocatore
     }
 
     @GetMapping("/president/selectPlayerToEdit")
