@@ -3,19 +3,19 @@
 
 <head>
     <title>Dettagli Squadra</title>
-	<link rel="stylesheet" href="/static/index.css">
- </head>
+    <link rel="stylesheet" href="/static/index.css">
+</head>
 
 <body>
 
     <h1>Dettagli Squadra</h1>
     <div th:if="${team}">
-        <span th:text="${team.name}"></span>
-        <span th:text="'(' + ${team.year} + ')'"></span>
-        <span th:text="${team.address}"></span>
+        <h2 th:text="${team.name}"></h2>
+        <p th:text="'Anno di fondazione: ' + ${team.year}"></p>
+        <p th:text="'Indirizzo: ' + ${team.address}"></p>
 
         <!-- Mostra solo il nome del presidente -->
-        <h2>Dettagli Presidente</h2>
+        <h3>Dettagli Presidente</h3>
         <div th:if="${team.president}">
             <p>Presidente: <span th:text="${team.president.name} + ' ' + ${team.president.surname}"></span></p>
         </div>
@@ -25,7 +25,7 @@
     </div>
 
     <div th:unless="${team}">
-        <p>Non esiste.</p>
+        <p>Squadra non trovata.</p>
     </div>
 
     <div>

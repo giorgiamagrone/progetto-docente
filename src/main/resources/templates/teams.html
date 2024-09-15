@@ -14,7 +14,7 @@
     <ul>
         <li th:each="team : ${teams}">
             <!-- Crea un link per ogni team, usando l'ID del team -->
-            <a th:href="@{/team/{id}(id=${team.id})}" th:text="${team.name} + ' (' + ${team.year} + ') (' + ${team.address} + ')'"></a>
+            <a th:href="@{/team/{id}(id=${team.id})}" th:text="${team.name}"></a>
         </li>
     </ul>
     <div>

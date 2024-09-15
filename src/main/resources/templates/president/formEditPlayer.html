@@ -14,27 +14,32 @@
     </header>
 
     <h1>Modifica Giocatore</h1>
+	<form action="#" th:action="@{/president/formEditPlayer/{id}(id=${player.id})}" th:object="${player}" method="post">
+	    <input type="hidden" th:field="*{id}" />
 
-    <form action="#" th:action="@{/president/formEditPlayer/{id}(id=${player.id})}" th:object="${player}" method="post">
-        <input type="hidden" th:field="*{id}" />
-        
-        <label for="name">Nome:</label>
-        <input type="text" th:field="*{name}" id="name" required />
-        
-        <label for="surname">Cognome:</label>
-        <input type="text" th:field="*{surname}" id="surname" required />
-        
-        <label for="role">Ruolo:</label>
-        <input type="text" th:field="*{role}" id="role" required />
-        
-        <button type="submit">Salva Modifiche</button>
-    </form>
+	    <!-- Campi del giocatore -->
+	    <label for="name">Nome:</label>
+	    <input type="text" th:field="*{name}" id="name" required />
 
-    <!-- Se il giocatore ha già un contratto -->
-    <div th:if="${player.contract != null}">
-        <h2>Modifica Contratto</h2>
-        <a th:href="@{/president/formEditContract/{contractId}(contractId=${player.contract.id})}">Modifica Contratto</a>
-    </div>
+	    <label for="surname">Cognome:</label>
+	    <input type="text" th:field="*{surname}" id="surname" required />
+
+	    <label for="role">Ruolo:</label>
+	    <input type="text" th:field="*{role}" id="role" required />
+
+	    <!-- Se il giocatore ha un contratto, mostra i campi del contratto -->
+	    <div th:if="${player.contract != null}">
+	        <h2>Modifica Contratto</h2>
+
+	        <label for="startCareer">Inizio carriera:</label>
+	        <input type="datetime-local" th:field="*{contract.startCareer}" id="startCareer" required />
+
+	        <label for="stopCareer">Fine carriera:</label>
+	        <input type="datetime-local" th:field="*{contract.stopCareer}" id="stopCareer" required />
+	    </div>
+
+	    <button type="submit">Salva Modifiche</button>
+	</form>
 
     <div>
         <a th:href="@{/president/selectPlayerToEdit}">Torna indietro</a>

@@ -28,6 +28,11 @@ public class TeamController {
     public String index() {
         return "index";
     }
+    @GetMapping("/teams")
+    public String listTeams(Model model) {
+        model.addAttribute("teams", this.teamRepository.findAll());
+        return "teams"; // Riferisce al template teams.html
+    }
 
     // Visualizza i dettagli di una squadra con i giocatori associati
     @GetMapping("/team/{id}")

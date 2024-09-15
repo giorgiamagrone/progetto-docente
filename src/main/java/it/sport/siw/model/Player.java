@@ -38,13 +38,11 @@ public class Player {
 	@ManyToOne
 	@JoinColumn(name = "team_id")
 	private Team team;
+	
 	@OneToOne(mappedBy = "player", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Contract contract;
-	@Column(name = "start_carreer")  // Correct column name mapping
-    private LocalDateTime startCareer;
-
-    @Column(name = "stop_carreer")  // Correct column name mapping
-    private LocalDateTime stopCareer;
+	
+    
 
 
 	

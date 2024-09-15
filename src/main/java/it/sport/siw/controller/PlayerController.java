@@ -2,6 +2,7 @@ package it.sport.siw.controller;
 
 import org.springframework.stereotype.Controller;
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,7 +88,7 @@ public class PlayerController {
 
         // Cerca se esiste già un giocatore con lo stesso nome, cognome e data di nascita
         Optional<Player> existingPlayer = playerRepository.findPlayerByDetails(player.getName(), player.getSurname(), player.getDateOfBirth());
-        
+
         if (existingPlayer.isPresent()) {
             // Verifica se il giocatore esistente ha un contratto attivo
             Player existing = existingPlayer.get();
@@ -99,12 +101,26 @@ public class PlayerController {
         // Imposta la squadra del giocatore con la squadra del presidente loggato
         player.setTeam(team);
 
-        // Salva il giocatore con la squadra assegnata
+        // Salva il giocatore
         playerRepository.save(player);
-        
+
+        // Se c'è un contratto associato al giocatore, impostalo e salvalo
+        Contract contract = player.getContract();
+        if (contract != null) {
+            contract.setPlayer(player);  // Associa il contratto al giocatore appena salvato
+            contract.setTeam(team);  // Associa il contratto alla squadra del presidente
+            contract.setStartCareer(LocalDateTime.now());  // Imposta l'inizio carriera al giorno corrente
+            contractRepository.save(contract);  // Salva il contratto
+        }
+
+        // Aggiorna nuovamente il giocatore con il contratto appena salvato
+        player.setContract(contract);
+        playerRepository.save(player); // Salva nuovamente il giocatore con il contratto aggiornato
+
         model.addAttribute("successMessage", "Giocatore aggiunto con successo alla squadra " + team.getName() + ".");
         return "redirect:/president/indexPlayer/" + player.getId(); // Redirect alla pagina di successo o al dettaglio del giocatore
     }
+
 
     @GetMapping("/president/selectPlayerToEdit")
     public String selectPlayerToEdit(Model model, Principal principal) {
@@ -130,45 +146,36 @@ public class PlayerController {
         return "president/formEditPlayer";  // Ritorna la vista per modificare il giocatore
     }
 
+
     @PostMapping("/president/formEditPlayer/{id}")
-    public String editPlayer(@PathVariable("id") Long id, @ModelAttribute("player") Player updatedPlayer, Principal principal, Model model) {
-        Player player = playerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("ID giocatore non valido: " + id));
+    public String formEditPlayer(@PathVariable("id") Long playerId, 
+                                 @ModelAttribute("player") Player player, 
+                                 BindingResult result, 
+                                 Model model) {
 
-        Credentials credentials = credentialsService.getCredentials(principal.getName());
-        Team presidentTeam = credentials.getPresident().getTeam();
+        // Trova il giocatore esistente
+        Player existingPlayer = playerRepository.findById(playerId).orElse(null);
 
-        if (!player.getTeam().equals(presidentTeam)) {
-            model.addAttribute("messaggioErrore", "Non puoi modificare un giocatore che non appartiene alla tua squadra.");
-            return "errorPage";
+        if (existingPlayer != null) {
+            // Aggiorna i campi del giocatore
+            existingPlayer.setName(player.getName());
+            existingPlayer.setSurname(player.getSurname());
+            existingPlayer.setRole(player.getRole());
+
+            // Aggiorna il contratto se presente
+            if (player.getContract() != null) {
+                Contract contract = player.getContract();
+                existingPlayer.setContract(contract);  // Imposta il contratto aggiornato nel giocatore
+                contractRepository.save(contract);  // Salva il contratto aggiornato
+            }
+
+            // Salva il giocatore
+            playerRepository.save(existingPlayer);
         }
 
-        // Validazione manuale
-        if (updatedPlayer.getName() == null || updatedPlayer.getName().isEmpty()) {
-            model.addAttribute("messaggioErrore", "Il nome del giocatore è obbligatorio.");
-            return "president/formEditPlayer";
-        }
-        if (updatedPlayer.getSurname() == null || updatedPlayer.getSurname().isEmpty()) {
-            model.addAttribute("messaggioErrore", "Il cognome del giocatore è obbligatorio.");
-            return "president/formEditPlayer";
-        }
-
-        // Aggiorna le informazioni del giocatore
-        player.setName(updatedPlayer.getName());
-        player.setSurname(updatedPlayer.getSurname());
-        player.setRole(updatedPlayer.getRole());
-
-        // Gestisci le modifiche al contratto se necessario
-        Contract contract = player.getContract();
-        if (contract != null) {
-            contract.setStartCareer(updatedPlayer.getContract().getStartCareer());
-            contract.setStopCareer(updatedPlayer.getContract().getStopCareer());
-            contractRepository.save(contract);
-        }
-
-        playerRepository.save(player);
-        return "redirect:/president/indexPlayer/" + player.getId();  // Reindirizza alla pagina dei dettagli del giocatore
+        return "redirect:/president/selectPlayerToEdit"; // Redirect dopo il salvataggio
     }
+
 
     @GetMapping("/president/selectPlayerToDelete")
     public String selectPlayerToDelete(Model model, Principal principal) {
