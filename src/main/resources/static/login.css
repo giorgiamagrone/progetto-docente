@@ -1,41 +1,83 @@
-/* login.css - Stili per la pagina di login */
+/* login.css - Centra tutto e posiziona il titolo "LOGIN" sopra le barre di input */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     background-color: #f2f2f2;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    text-align: center; /* Centra il testo */
 }
 
 .login-container {
-    background-color: #fff;
-    padding: 20px;
+    background-color: #87CEFA; /* Sfondo celeste grande */
+    padding: 40px 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 300px;
+    width: 400px; /* Larghezza del contenitore */
     text-align: center;
+    display: flex;
+    flex-direction: column; /* Posiziona gli elementi uno sopra l'altro */
+    justify-content: center;
+    align-items: center;
 }
 
+/* Titolo "LOGIN" centrato sopra le barre di input */
+h1 {
+    font-size: 28px;
+    color: #000;
+    text-align: center;
+    margin-bottom: 20px; /* Spazio tra il titolo e le barre di input */
+    font-family: 'Vogue', serif; /* Usa il font Vogue o un font simile */
+    text-transform: uppercase; /* Rende il testo maiuscolo */
+}
+
+/* Input fields */
 input[type="text"], input[type="password"] {
-    width: 100%;
+    width: 90%; /* Larghezza delle barre per inserimento dati */
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
     border-radius: 4px;
+    text-align: left;
+    display: block;
+    transition: border-color 0.3s ease;
 }
 
+/* Effetto focus */
+input[type="text"]:focus, input[type="password"]:focus {
+    border-color: #00BFFF; /* Colore del bordo quando il campo è attivo */
+}
+
+/* Bottone per inviare */
 button {
-    width: 100%;
+    width: 90%; /* Allinea il bottone alla stessa larghezza degli input */
     padding: 10px;
-    background-color: #5cb85c;
+    background-color: #00BFFF;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
 }
 
 button:hover {
-    background-color: #4cae4c;
+    background-color: #1a73e8;
+    transform: scale(1.05);
+}
+
+/* Link "Torna alla Home" posizionato sotto il bottone */
+a {
+    margin-top: 20px; /* Spazio tra il bottone e il link */
+    font-size: 14px;
+    color: #333;
+    text-decoration: none;
+    font-family: 'Comic Sans MS', cursive, sans-serif; /* Font per il link */
+    display: block; /* Centra il link */
+}
+
+a:hover {
+    color: #00BFFF; /* Cambia colore al passaggio del mouse */
 }
