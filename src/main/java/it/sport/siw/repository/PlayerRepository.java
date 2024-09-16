@@ -1,5 +1,6 @@
 package it.sport.siw.repository;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.Query;
@@ -21,8 +22,9 @@ public interface PlayerRepository extends CrudRepository<Player, Long>{
 
 		@Query("SELECT p FROM Player p LEFT JOIN FETCH p.contract WHERE p.id = :id")
 		Optional<Player> findByIdWithContract(@Param("id") Long id);
+		  Optional<Player> findByIdAndTeamIsNotNull(Long id);
 		@Query("SELECT p FROM Player p WHERE p.name = :name AND p.surname = :surname AND p.dateOfBirth = :dateOfBirth")
-		Optional<Player> findPlayerByDetails(@Param("name") String name, @Param("surname") String surname, @Param("dateOfBirth") LocalDate dateOfBirth);
+		List<Player> findPlayerByDetails(@Param("name") String name, @Param("surname") String surname, @Param("dateOfBirth") LocalDate dateOfBirth);
 
 
 }

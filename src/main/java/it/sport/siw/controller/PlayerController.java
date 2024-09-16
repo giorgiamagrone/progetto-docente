@@ -4,6 +4,7 @@ import org.springframework.stereotype.Controller;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,15 +88,16 @@ public class PlayerController {
         }
 
         // Cerca se esiste già un giocatore con lo stesso nome, cognome e data di nascita
-        Optional<Player> existingPlayer = playerRepository.findPlayerByDetails(player.getName(), player.getSurname(), player.getDateOfBirth());
+        List<Player> existingPlayers = playerRepository.findPlayerByDetails(player.getName(), player.getSurname(), player.getDateOfBirth());
 
-        if (existingPlayer.isPresent()) {
-            // Verifica se il giocatore esistente ha un contratto attivo
-            Player existing = existingPlayer.get();
-            if (existing.getContract() != null && LocalDateTime.now().isBefore(existing.getContract().getStopCareer())) {
-                model.addAttribute("errorMessage", "Questo giocatore è già tesserato in un'altra squadra.");
-                return "/president/errorPage"; // Mostra la pagina di errore
-            }
+        if (!existingPlayers.isEmpty()) {
+        	for (Player existingPlayer : existingPlayers) {
+                // Verifica se il giocatore esistente ha un contratto attivo
+                if (existingPlayer.getContract() != null && LocalDateTime.now().isBefore(existingPlayer.getContract().getStopCareer())) {
+                    model.addAttribute("errorMessage", "Questo giocatore ha già un contratto attivo con un'altra squadra.");
+                    return "/president/errorPage"; // Mostra la pagina di errore
+                }
+        }
         }
 
         // Imposta la squadra del giocatore con la squadra del presidente loggato
@@ -119,7 +121,7 @@ public class PlayerController {
         model.addAttribute("successMessage", "Giocatore aggiunto con successo alla squadra " + team.getName() + ".");
         return "redirect:/president/indexPlayer/" + player.getId(); // Redirect alla pagina di successo o al dettaglio del giocatore
     }
-
+    
 
     @GetMapping("/president/selectPlayerToEdit")
     public String selectPlayerToEdit(Model model, Principal principal) {
