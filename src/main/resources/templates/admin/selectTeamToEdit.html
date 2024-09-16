@@ -2,31 +2,18 @@
 <html>
 <head>
     <title>Seleziona Squadra da Modificare</title>
- <link rel="stylesheet" href="/static/form.css">
- </head>
+    <link rel="stylesheet" href="/static/form2.css">
+</head>
 <body>
     <h1>Seleziona Squadra da Modificare</h1>
     
-    <table>
-        <thead>
-            <tr>
-                <th>Nome Squadra</th>
-                <th>Anno di Fondazione</th>
-                <th>Azioni</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="team : ${teams}">
-                <td th:text="${team.name}">Nome Squadra</td>
-                <td th:text="${team.year}">Anno di Fondazione</td>
-                <td>
-                    <a th:href="@{/admin/formEditTeam/{id}(id=${team.id})}">Modifica</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-	<div>
-		   <a th:href="@{/admin/indexAdmin}">Torna alla Home</a>
-		 </div>
+    <ul>
+        <li th:each="team : ${teams}">
+            <a th:href="@{/admin/formEditTeam/{id}(id=${team.id})}" th:text="${team.name}">Nome Squadra</a>
+        </li>
+    </ul>
+    
+<div class="footer-link">        <a th:href="@{/admin/indexAdmin}">Torna alla Home</a>
+    </div>
 </body>
 </html>

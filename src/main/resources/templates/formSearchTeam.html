@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Cerca Team</title>
- <link rel="stylesheet" href="/static/form.css">
+ <link rel="stylesheet" href="/static/form2.css">
  </head>
 
 <body>
@@ -21,11 +21,10 @@
 	    <div th:if="${teams.isEmpty()}">
 	      Nessun team trovato per l'anno specificato.
 	    </div>
-	
-	 <!-- Ancora per tornare alla home -->
-  <div>
-    <a th:href="@{/}">Torna alla Home</a>
-  </div>
+		<!-- Ancora per tornare alla home -->
+<div class="footer-link">		 
+	  <a th:href="@{/}">Torna alla Home</a>
+		 </div>
 </body>
 
 </html>

@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Seleziona Presidente da Eliminare</title>
- <link rel="stylesheet" href="/static/form.css">
+ <link rel="stylesheet" href="/static/form2.css">
  </head>
 <body>
     <h1>Seleziona Presidente da Eliminare</h1>
@@ -10,8 +10,8 @@
     <table>
         <thead>
             <tr>
-                <th>Nome Presidente</th>
-                <th>Cognome Presidente</th>
+                <th>Nome </th>
+                <th>Cognome </th>
                 <th>Azioni</th>
             </tr>
         </thead>
@@ -20,13 +20,13 @@
                 <td th:text="${president.name}">Nome Presidente</td>
                 <td th:text="${president.surname}">Cognome Presidente</td>
                 <td>
-                    <a th:href="@{/admin/selectPresidentToDelete/{id}(id=${president.id})}">Elimina</a>
+                    <a th:href="@{/admin/selectPresidentToDelete/{id}(id=${president.id})}" style="color: red; text-decoration: none;">Elimina</a>
                 </td>
             </tr>
         </tbody>
     </table>
-	<div>
-		   <a th:href="@{/admin/indexAdmin}">Torna alla Home</a>
+<div class="footer-link">	
+	   <a th:href="@{/admin/indexAdmin}">Torna alla Home</a>
 		 </div>
 </body>
 </html>

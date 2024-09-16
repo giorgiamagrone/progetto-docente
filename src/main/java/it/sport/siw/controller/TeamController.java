@@ -126,7 +126,7 @@ public class TeamController {
 
                 model.addAttribute("team", existingTeam);
 
-                return "redirect:/team/" + id;
+                return "redirect:/admin/indexTeam/" + id;
             } else {
                 return "redirect:/error";
             }

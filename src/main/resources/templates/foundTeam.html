@@ -23,11 +23,10 @@
 	<ul th:if="${!teams.isEmpty()}">
 		<li th:each="team : ${teams}">
 			<a href="team.html" th:href="@{'/team' + '/' + ${team.id}}"
-				th:text="${team.name} + ' (' + ${team.year} + ')' + ' (' + ${team.address} + ')'"></a>
+				th:text="${team.name} "></a>
 		</li>
 	</ul>
-	<div>
-    <a th:href="@{/}">Torna alla Home</a>
+<div class="footer-link">    <a th:href="@{/}">Torna alla Home</a>
   </div>
 </body>
 

@@ -148,7 +148,7 @@ public class PresidentController {
             // Salva il presidente aggiornato
             this.presidentRepository.save(existingPresident);
             model.addAttribute("messaggioSuccesso", "Presidente aggiornato con successo");
-            return "redirect:/presidents";  // Redirect alla lista dei presidenti
+            return "redirect:/admin/presidents";  // Redirect alla lista dei presidenti
         } else {
             model.addAttribute("messaggioErrore", "Errore nell'aggiornamento del presidente");
             return "admin/formEditPresident";

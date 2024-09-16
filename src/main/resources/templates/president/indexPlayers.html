@@ -3,7 +3,7 @@
 
 <head>
     <title>Giocatori</title>
-	<link rel="stylesheet" href="/static/index.css">
+	<link rel="stylesheet" href="/static/index2.css">
  </head>
 
 <body>
@@ -14,7 +14,7 @@
         </div>
     </header>
 
-    <h1>Lista Giocatori</h1>
+    <h1>Lista giocatori della tua squadra</h1>
 
     <div th:if="${players == null || players.isEmpty()}">
         <p>Non ci sono giocatori nel sistema.</p>
@@ -26,14 +26,13 @@
                 <a th:href="@{/president/indexPlayer/{id}(id=${player.id})}" 
                    th:text="${player.name} + ' ' + ${player.surname}"></a>
                 <!-- Controllo se il team esiste -->
-                <span th:if="${player.team != null}" th:text="' - Squadra: ' + ${player.team.name}"></span>
-                <span th:if="${player.team == null}" th:text="' - Squadra: Nessuna squadra'"></span>
+                <span th:if="${player.team != null}" ></span>
+                <span th:if="${player.team == null}"></span>
             </li>
         </ul>
     </div>
 
-    <div>
-        <a th:href="@{/president/indexPresident}">Torna alla Home</a>
+<div class="footer-link">        <a th:href="@{/president/indexPresident}">Torna alla Home</a>
     </div>
 </body>
 

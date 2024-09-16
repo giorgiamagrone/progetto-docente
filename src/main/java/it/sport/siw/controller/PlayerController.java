@@ -108,7 +108,6 @@ public class PlayerController {
         Contract contract = player.getContract();
         if (contract != null) {
             contract.setPlayer(player);  // Associa il contratto al giocatore appena salvato
-            contract.setTeam(team);  // Associa il contratto alla squadra del presidente
             contract.setStartCareer(LocalDateTime.now());  // Imposta l'inizio carriera al giorno corrente
             contractRepository.save(contract);  // Salva il contratto
         }
@@ -166,7 +165,7 @@ public class PlayerController {
             if (player.getContract() != null) {
                 Contract contract = player.getContract();
                 existingPlayer.setContract(contract);  // Imposta il contratto aggiornato nel giocatore
-                contractRepository.save(contract);  // Salva il contratto aggiornato
+                contract = contractRepository.save(contract);  // Salva il contratto aggiornato
             }
 
             // Salva il giocatore

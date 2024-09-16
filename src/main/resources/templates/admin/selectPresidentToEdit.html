@@ -2,16 +2,10 @@
 <html>
 <head>
     <title>Seleziona Presidente da Modificare</title>
- <link rel="stylesheet" href="/static/form.css">
+ <link rel="stylesheet" href="/static/form2.css">
  </head>
 <body>
-    <header>
-        <div th:if="${userDetails}">
-            <span th:text="${userDetails.username}"></span>
-            <a href="/logout">Logout</a>
-        </div>
-    </header>
-
+  
     <h1>Seleziona un Presidente da Modificare</h1>
 
     <!-- Elenco dei presidenti -->
@@ -23,8 +17,7 @@
         </li>
     </ul>
 
-    <div>
-        <a href="/admin/indexAdmin">Torna alla home </a>
+<div class="footer-link">        <a href="/admin/indexAdmin">Torna alla home </a>
     </div>
 </body>
 </html>

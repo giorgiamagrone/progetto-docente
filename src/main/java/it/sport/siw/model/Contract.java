@@ -15,20 +15,16 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "player_id")
     private Player player;
     
-    @ManyToOne
-    @JoinColumn(name = "team_id")  // Many contracts can be associated with one team
-    private Team team;
-    
     @Column(nullable = false)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime startCareer;
     
     @Column(nullable = false)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")    
     private LocalDateTime stopCareer;
 
    
@@ -36,7 +32,7 @@ public class Contract {
 
     public Contract(Player player, Team team, LocalDateTime startCareer, LocalDateTime stopCareer) {
         this.player = player;
-        this.team = team;
+       
         this.startCareer = startCareer;
         this.stopCareer = stopCareer;
     }
@@ -62,13 +58,7 @@ public class Contract {
         return startCareer;
     }
 
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
+   
 
     public void setStartCareer(LocalDateTime startCareer) {
         this.startCareer = startCareer;

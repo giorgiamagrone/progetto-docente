@@ -2,35 +2,21 @@
 <html>
 <head>
     <title>Seleziona Giocatore da Eliminare</title>
- <link rel="stylesheet" href="/static/form.css">
- </head>
+    <link rel="stylesheet" href="/static/form2.css">
+</head>
 <body>
     <h1>Seleziona Giocatore da Eliminare</h1>
     
-    <table>
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Cognome</th>
-                <th>Ruolo</th>
-                <th>Azioni</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="player : ${players}">
-                <td th:text="${player.name}">Nome</td>
-                <td th:text="${player.surname}">Cognome</td>
-                <td th:text="${player.role}">Ruolo</td>
-                <td>
-                    <form th:action="@{/president/deletePlayer/{id}(id=${player.id})}" method="post">
-                        <button type="submit">Elimina</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <ul>
+        <li th:each="player : ${players}">
+            <span th:text="${player.name} + ' ' + ${player.surname}">Nome Cognome</span>
+            <form th:action="@{/president/deletePlayer/{id}(id=${player.id})}" method="post" style="display:inline;">
+                <button type="submit" style="color: red; background: none; border: none; text-decoration: none; cursor: pointer;">Elimina</button>
+            </form>
+        </li>
+    </ul>
     
-    <div>
+    <div class="footer-link">      
         <a th:href="@{/president/indexPresident}">Torna alla Home</a>
     </div>
 </body>

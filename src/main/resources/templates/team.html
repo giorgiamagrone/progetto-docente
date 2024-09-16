@@ -14,7 +14,7 @@
         <p th:text="'Anno di fondazione: ' + ${team.year}"></p>
         <p th:text="'Indirizzo: ' + ${team.address}"></p>
 
-        <!-- Mostra solo il nome del presidente -->
+        <!-- Mostra i dettagli del presidente -->
         <h3>Dettagli Presidente</h3>
         <div th:if="${team.president}">
             <p>Presidente: <span th:text="${team.president.name} + ' ' + ${team.president.surname}"></span></p>
@@ -22,13 +22,26 @@
         <div th:unless="${team.president}">
             <p>Nessun presidente associato.</p>
         </div>
+
+        <!-- Aggiungi la lista dei giocatori -->
+        <h3>Giocatori della Squadra</h3>
+        <div th:if="${team.players}">
+            <ul>
+                <li th:each="player : ${team.players}">
+                    <span th:text="${player.name} + ' ' + ${player.surname} + ', ' + ${player.role}"></span>
+                </li>
+            </ul>
+        </div>
+        <div th:unless="${team.players}">
+            <p>Nessun giocatore associato alla squadra.</p>
+        </div>
     </div>
 
     <div th:unless="${team}">
         <p>Squadra non trovata.</p>
     </div>
 
-    <div>
+    <div class="footer-link">        
         <a th:href="@{/}">Torna alla Home</a>
     </div>
 

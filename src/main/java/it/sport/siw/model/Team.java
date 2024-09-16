@@ -102,22 +102,23 @@ public class Team {
         player.setTeam(null);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(address, id, name, president, year, players);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(address, id, name, year);
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Team other = (Team) obj;
-        return Objects.equals(address, other.address) && Objects.equals(id, other.id)
-                && Objects.equals(name, other.name) && Objects.equals(president, other.president)
-                && Objects.equals(year, other.year) && Objects.equals(players, other.players);
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Team other = (Team) obj;
+		return Objects.equals(address, other.address) && Objects.equals(id, other.id)
+				&& Objects.equals(name, other.name) && Objects.equals(year, other.year);
+	}
+
+    
 }

@@ -115,7 +115,7 @@ public class Player {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(city, dateOfBirth, id, name, role, surname, team);
+		return Objects.hash(city, dateOfBirth, id, name, role, surname);
 	}
 
 	@Override
@@ -129,7 +129,9 @@ public class Player {
 		Player other = (Player) obj;
 		return Objects.equals(city, other.city) && Objects.equals(dateOfBirth, other.dateOfBirth)
 				&& Objects.equals(id, other.id) && Objects.equals(name, other.name) && Objects.equals(role, other.role)
-				&& Objects.equals(surname, other.surname) && Objects.equals(team, other.team);
+				&& Objects.equals(surname, other.surname);
 	}
+
+	
 
 }

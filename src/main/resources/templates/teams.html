@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Team</title>
-	<link rel="stylesheet" href="/static/index.css">
+	<link rel="stylesheet" href="/static/index2.css">
  </head>
 <body>
     <h1>Team</h1>
@@ -17,8 +17,7 @@
             <a th:href="@{/team/{id}(id=${team.id})}" th:text="${team.name}"></a>
         </li>
     </ul>
-    <div>
-    <a th:href="@{/}">Torna alla Home</a>
+<div class="footer-link">    <a th:href="@{/}">Torna alla Home</a>
   </div>
 </body>
 </html>
